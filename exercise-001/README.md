@@ -235,7 +235,7 @@ print(f"Wert: {x}, Adresse: {id(x)}")  # id() zeigt Speicheradresse
     - beliebige
     - Nullwert
     - keine Werte
-5. Was passiert wenn die Schlüsselwörter `staic` und `const` verwendet werden?
+5. Was passiert wenn die Schlüsselwörter `static` und `const` verwendet werden?
 
 ---
 
@@ -243,7 +243,7 @@ print(f"Wert: {x}, Adresse: {id(x)}")  # id() zeigt Speicheradresse
 
 1. Deklarieren Sie im `main` eine lokale Variable `int localVar = 2;`.
 2. Geben Sie den Wert und die Adresse von `localVar` mit `fmt::print` aus.
-3. Was passiert wenn die Schlüsselwörter `staic` und `const` verwendet werden?
+3. Was passiert wenn die Schlüsselwörter `static` und `const` verwendet werden?
 4. Wie ändert sich die Adresse im Vergleich zu 1.4 und 1.5
 
 ---
