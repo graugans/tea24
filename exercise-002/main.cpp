@@ -5,11 +5,7 @@
 
 auto main(int argc, char** argv) -> int
 {
-    /**
-     * The {fmt} lib is a cross platform library for printing and formatting text
-     * it is much more convenient than std::cout and printf
-     * More info at https://fmt.dev/latest/api.html
-     */
+    /*
     fmt::print("Hello, {}!\n", argv[0]);
 
     doSomething(42);
@@ -24,12 +20,14 @@ auto main(int argc, char** argv) -> int
     fmt::print("The value of returnedPtr content  after doReturnAPtr is: {}\n", *returnedPtr);
     doSomething(42);
     fmt::print("The value of returnedPtr content  after doReturnAPtr is: {}\n", *returnedPtr);
-
+    */
+    doSomethingStatic();
+/*
     doSomethingStatic();
     doSomethingStatic();
     doSomethingStatic();
-    doSomethingStatic();
-
+*/
+/*
     fmt::print("Value of foo {} address of foo {}\n", foo, fmt::ptr(&foo));
     fmt::print("Value of foo2 {} address of foo2 {}\n", foo2, fmt::ptr(&foo2));
     fmt::print("Value of data {} address of data {}\n", data, fmt::ptr(&data));
@@ -49,6 +47,6 @@ auto main(int argc, char** argv) -> int
 
     fmt::print("array_ptr[0] {}\n", array_ptr[0]);
     fmt::print("big_data_blob[0] {}\n", big_data_blob[0]);
-
+*/
     return 0; /* exit gracefully*/
 }

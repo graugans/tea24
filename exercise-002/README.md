@@ -3,12 +3,14 @@
 ## Notwendige git Kommandos
 
 ```sh
-git status
-git branch -a
-git switch main
+
 git fetch --all
-# create a new local branch based on exercise-002
-git switch -c solution-002 upstream/exercise-002
+git switch main 
+git pull --rebase upstream main 
+git push -f origin  main 
+git switch -c solution-002 
+git status
+
 # perform changes
 git add exercise-002
 git commit -m "feat: solve exercise-002 static task"
