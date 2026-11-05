@@ -17,6 +17,10 @@ const int rodata2 = 43;
 
 const int big_data_blob[] = {42,0xff};
 
+
+static int moduleCounter;
+static int moduleValue = 123;
+
 void doSomething(int value)
 {
     value = value + 1;
@@ -68,4 +72,28 @@ void doSomethingStatic()
         once = true;
         doSomethingStatic();
     }
+}
+
+void printModuleStaticValues() {
+    moduleCounter = moduleCounter + 1;
+    fmt::println(
+        "[{}], moduleCounter: {}, address of moduleCounter: {}",
+         __func__, 
+         moduleCounter, 
+         fmt::ptr(&moduleCounter)
+        );
+
+    fmt::println(
+        "[{}], moduleValue: {}, address of moduleValue: {}",
+         __func__, 
+         moduleValue, 
+         fmt::ptr(&moduleValue)
+        );
+    fmt::println(
+        "[{}], data(.data): {}, address of data: {}",
+         __func__, 
+         data, 
+         fmt::ptr(&data)
+        );
+    moduleValue = moduleValue + 42;
 }
