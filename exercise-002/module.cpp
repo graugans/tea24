@@ -43,6 +43,29 @@ int* doReturnAPtr()
 void doSomethingStatic()
 {
     static int value = 56;
+    int noneStatic = 42;
+    static bool once = false;
+
+    fmt::println(
+        "[{}] doSomethingStatic, value: {}, address of value: {}",
+         __func__, 
+         value, 
+         fmt::ptr(&value)
+        );
+    fmt::println(
+        "[{}] doSomethingStatic, noneStatic: {}, address of noneStatic: {}",
+         __func__, 
+         noneStatic, 
+         fmt::ptr(&noneStatic)
+        );
+
+    /* increment the variables by one */
     value = value + 1;
-    fmt::print("doSomethingStatic, value {}\n", value);
+    noneStatic = noneStatic + 1;
+    
+    /* Let's call ourself to show the stack frame ... */
+    if(!once) {
+        once = true;
+        doSomethingStatic();
+    }
 }
