@@ -2,6 +2,8 @@
 
 #include <fmt/format.h>
 
+static int shadow = 42;
+
 /* .bss Segment */
 int foo;
 int foo2 = 0;
@@ -110,6 +112,16 @@ void printTheBSSStuff() {
          __func__, 
          foo2, 
          fmt::ptr(&foo2)
+        );
+
+}
+
+void printTheModuleShadow() {
+    fmt::println(
+        "[{}], shadow: {}, address of shadow: {}",
+         __func__, 
+         shadow, 
+         fmt::ptr(&shadow)
         );
 
 }

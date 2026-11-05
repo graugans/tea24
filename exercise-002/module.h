@@ -36,4 +36,5 @@ void printModuleStaticValues();
 
 void printTheBSSStuff();
 
+void printTheModuleShadow();
 #endif

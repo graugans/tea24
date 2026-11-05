@@ -3,6 +3,8 @@
 
 #include "module.h"
 
+int shadow = 11;
+
 auto main(int argc, char** argv) -> int
 {
     /*
@@ -53,6 +55,15 @@ auto main(int argc, char** argv) -> int
     printTheBSSStuff();
     fmt::print("Value of foo {} address of foo {}\n", foo, fmt::ptr(&foo));
     fmt::print("Value of foo2 {} address of foo2 {}\n", foo2, fmt::ptr(&foo2));
+
+    fmt::println(
+        "[{}] Value of shadow {} address of shadow {}",
+        __func__,
+         shadow, 
+         fmt::ptr(&shadow)
+        );
+
+    printTheModuleShadow();
 
     return 0; /* exit gracefully*/
 }
