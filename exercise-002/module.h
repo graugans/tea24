@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "helper.h"
 
 #ifndef WORKSPACES_TEA22_EXERCISE_003_MODULE_H
 #define WORKSPACES_TEA22_EXERCISE_003_MODULE_H

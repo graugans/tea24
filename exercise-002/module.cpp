@@ -8,6 +8,8 @@ static int shadow = 42;
 int foo;
 int foo2 = 0;
 
+int bss;
+
 /* .data Segment */
 int data = 45;
 int data2 = 43;
