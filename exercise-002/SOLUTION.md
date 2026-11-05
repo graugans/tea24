@@ -109,3 +109,32 @@ index a2f58cf..3949dd8 100644
 Durch das Schlüsselwort `static` auf Modulebene bleibt die Sichtbarkeit auf das Modul beschränkt. Das lässt sich mit einem modernen Compiler auch nicht mehr ändern.
 
 Frage: was passiert bei einem Pointer auf eine Modulstatische Variable?
+
+## Aufgabe 3
+
+```sh
+nm -SC ./build/bin/exercise-002
+```
+
+Das `-C` wird benötigt um das NameMangling von C++ aufzulösen.
+
+Vorher:
+```
+0000000000004028 0000000000000004 d _ZZ17doSomethingStaticvE5value
+```
+
+Nachher:
+```
+0000000000004028 0000000000000004 d doSomethingStatic()::value
+```
+
+Häufige Typbuchstaben in deiner nm Ausgabe
+
+    B / b: BSS, uninitialisierte oder nullinitialisierte Daten. Großbuchstabe bedeutet üblicherweise global sichtbar, kleinbuchstabe lokal.
+    D / d: initialisierte, beschreibbare Daten, typischerweise .data.
+    R / r: schreibgeschützte Daten, typischerweise .rodata.
+    T / t: Programmcode, typischerweise .text.
+    U: undefiniertes Symbol — wird von einer anderen Objektdatei oder Bibliothek bereitgestellt.
+    W / w: schwaches Symbol.
+
+HINWEIS: Die Buchstaben sind eine hilfreiche Zuordnung, aber nicht für jede ELF-Sektion eine vollständige oder eindeutige Beschreibung.
