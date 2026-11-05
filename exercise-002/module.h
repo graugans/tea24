@@ -34,4 +34,6 @@ void doSomethingStatic();
 
 void printModuleStaticValues();
 
+void printTheBSSStuff();
+
 #endif

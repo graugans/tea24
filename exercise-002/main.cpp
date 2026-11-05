@@ -28,8 +28,6 @@ auto main(int argc, char** argv) -> int
     doSomethingStatic();
 */
 /*
-    fmt::print("Value of foo {} address of foo {}\n", foo, fmt::ptr(&foo));
-    fmt::print("Value of foo2 {} address of foo2 {}\n", foo2, fmt::ptr(&foo2));
     fmt::print("Value of data {} address of data {}\n", data, fmt::ptr(&data));
     fmt::print("Value of data2 {} address of data2 {}\n", data2, fmt::ptr(&data2));
     fmt::print("Value of rodata {} address of rodata {}\n", rodata, fmt::ptr(&rodata));
@@ -51,6 +49,10 @@ auto main(int argc, char** argv) -> int
 
     printModuleStaticValues();
     printModuleStaticValues();
+
+    printTheBSSStuff();
+    fmt::print("Value of foo {} address of foo {}\n", foo, fmt::ptr(&foo));
+    fmt::print("Value of foo2 {} address of foo2 {}\n", foo2, fmt::ptr(&foo2));
 
     return 0; /* exit gracefully*/
 }

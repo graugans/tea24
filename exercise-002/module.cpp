@@ -97,3 +97,19 @@ void printModuleStaticValues() {
         );
     moduleValue = moduleValue + 42;
 }
+
+void printTheBSSStuff() {
+    fmt::println(
+        "[{}], foo(.bss): {}, address of foo: {}",
+         __func__, 
+         foo, 
+         fmt::ptr(&foo)
+        );
+    fmt::println(
+        "[{}], foo2(.bss): {}, address of foo: {}",
+         __func__, 
+         foo2, 
+         fmt::ptr(&foo2)
+        );
+
+}
