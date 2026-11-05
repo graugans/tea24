@@ -138,3 +138,10 @@ Häufige Typbuchstaben in deiner nm Ausgabe
     W / w: schwaches Symbol.
 
 HINWEIS: Die Buchstaben sind eine hilfreiche Zuordnung, aber nicht für jede ELF-Sektion eine vollständige oder eindeutige Beschreibung.
+
+## Aufgabe 4 (Zusatz)
+
+```
+[main] Value of shadow 11 address of shadow 0x5d3b19163020
+[printTheModuleShadow], shadow: 42, address of shadow: 0x5d3b19163034
+```
