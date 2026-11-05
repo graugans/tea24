@@ -48,5 +48,9 @@ auto main(int argc, char** argv) -> int
     fmt::print("array_ptr[0] {}\n", array_ptr[0]);
     fmt::print("big_data_blob[0] {}\n", big_data_blob[0]);
 */
+
+    printModuleStaticValues();
+    printModuleStaticValues();
+
     return 0; /* exit gracefully*/
 }

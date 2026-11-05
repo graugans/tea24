@@ -10,4 +10,102 @@ Die Ausgabe lautet:
 ```
 Durch den einmaligen rekursiven Aufruf sehen wir das die Stacklokale Variable `int noneStatic = 42;` mit jedem Durchlauf ihren initialen Wert behält. Die Adresse der Variablen wird im verschachtelten Aufruf auch kleiner (0x7fff4218de10), da der Stack nach unten wächst. Die Addresse der statischen Variable Value bleibt gleich und der Wert ändert sich durch das inkrement bei jedem Aufruf.
 
+## Aufgabe 2
 
+Das wurde geändert:
+```diff
+diff --git a/exercise-002/main.cpp b/exercise-002/main.cpp
+index aa4cded..8a75243 100644
+--- a/exercise-002/main.cpp
++++ b/exercise-002/main.cpp
+@@ -48,5 +48,9 @@ auto main(int argc, char** argv) -> int
+     fmt::print("array_ptr[0] {}\n", array_ptr[0]);
+     fmt::print("big_data_blob[0] {}\n", big_data_blob[0]);
+ */
++
++    printModuleStaticValues();
++    printModuleStaticValues();
++
+     return 0; /* exit gracefully*/
+ }
+diff --git a/exercise-002/module.cpp b/exercise-002/module.cpp
+index 1e41cff..0f0fdb5 100644
+--- a/exercise-002/module.cpp
++++ b/exercise-002/module.cpp
+@@ -17,6 +17,10 @@ const int rodata2 = 43;
+ 
+ const int big_data_blob[] = {42,0xff};
+ 
++
++static int moduleCounter;
++static int moduleValue = 123;
++
+ void doSomething(int value)
+ {
+     value = value + 1;
+@@ -69,3 +73,27 @@ void doSomethingStatic()
+         doSomethingStatic();
+     }
+ }
++
++void printModuleStaticValues() {
++    moduleCounter = moduleCounter + 1;
++    fmt::println(
++        "[{}], moduleCounter: {}, address of moduleCounter: {}",
++         __func__, 
++         moduleCounter, 
++         fmt::ptr(&moduleCounter)
++        );
++
++    fmt::println(
++        "[{}], moduleValue: {}, address of moduleValue: {}",
++         __func__, 
++         moduleValue, 
++         fmt::ptr(&moduleValue)
++        );
++    fmt::println(
++        "[{}], data(.data): {}, address of data: {}",
++         __func__, 
++         data, 
++         fmt::ptr(&data)
++        );
++    moduleValue = moduleValue + 42;
++}
+\ No newline at end of file
+diff --git a/exercise-002/module.h b/exercise-002/module.h
+index a2f58cf..3949dd8 100644
+--- a/exercise-002/module.h
++++ b/exercise-002/module.h
+@@ -11,6 +11,19 @@ extern const int rodata;
+ extern const int rodata2;
+ extern const int big_data_blob[2];
+ 
++/*
++This is not possible due the fact moduleCounter is static
++
++[build] /workspaces/tea24/exercise-002/module.cpp:21:12: error: static declaration of 'moduleCounter' follows non-static declaration
++[build]    21 | static int moduleCounter;
++[build]       |            ^
++[build] /workspaces/tea24/exercise-002/module.h:17:12: note: previous declaration is here
++[build]    17 | extern int moduleCounter;
++[build]       |            ^
++
++extern int moduleCounter;
++*/
++
+ void doSomething(int value);
+ 
+ void doSomethingPtr(int* ptr);
+@@ -19,6 +32,6 @@ int* doReturnAPtr();
+ 
+ void doSomethingStatic();
+ 
+-
++void printModuleStaticValues();
+ 
+ #endif
+```
+
+Durch das Schlüsselwort `static` auf Modulebene bleibt die Sichtbarkeit auf das Modul beschränkt. Das lässt sich mit einem modernen Compiler auch nicht mehr ändern.
+
+Frage: was passiert bei einem Pointer auf eine Modulstatische Variable?
