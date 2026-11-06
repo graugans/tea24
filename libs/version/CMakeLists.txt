@@ -8,6 +8,9 @@ string(TIMESTAMP BUILD_DATE "%Y-%m-%dT%H:%M:%S")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Include dependencies
+find_package(fmt REQUIRED)
+
 ############################################################
 # Create a library
 ############################################################
@@ -22,3 +25,8 @@ target_include_directories(version_library
         ${PROJECT_SOURCE_DIR}/include
 )
 
+# Add libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version_config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/version_config.h" @ONLY)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/include") # add the output path to the include PATH

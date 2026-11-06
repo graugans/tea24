@@ -5,9 +5,9 @@ namespace tea
 {
 constexpr auto PROJECT_NAME{"@PROJECT_NAME@"};
 constexpr auto PROJECT_VER{"@PROJECT_VERSION@"};
-constexpr auto PROJECT_VER_MAJOR{"@PROJECT_VERSION_MAJOR@"};
-constexpr auto PROJECT_VER_MINOR{"@PROJECT_VERSION_MINOR@"};
-constexpr auto PROJECT_VER_PATCH{"@PROJECT_VERSION_PATCH@"};
+constexpr unsigned int PROJECT_VER_MAJOR{@PROJECT_VERSION_MAJOR@};
+constexpr unsigned int PROJECT_VER_MINOR{@PROJECT_VERSION_MINOR@};
+constexpr unsigned int PROJECT_VER_PATCH{@PROJECT_VERSION_PATCH@};
 constexpr auto PROJECT_BUILD_DATE{"@BUILD_DATE@"};
 }  // namespace tea
 #endif  // CONFIG_H_IN

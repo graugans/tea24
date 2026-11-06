@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     fmt::println("Hello, {}!", tea::PROJECT_NAME);
     fmt::println("Hello, from the lib: {}!",projectName());
 
-    /* INSERT YOUR CODE HERE */
+    fmt::println("The full version from the lib: {}",fullVersion());
 
     return 0; /* exit gracefully*/
 }
