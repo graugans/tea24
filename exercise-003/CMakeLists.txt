@@ -24,4 +24,6 @@ add_executable(${PROJECT_NAME} main.cpp)
 # Add libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
                                         fmt::fmt
-                                        CLI11::CLI11)
+                                        CLI11::CLI11
+                                        version_library
+)

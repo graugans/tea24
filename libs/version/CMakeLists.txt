@@ -1,0 +1,24 @@
+cmake_minimum_required (VERSION 3.10.2)
+
+# Set the project name to your project name, template isn't very descriptive
+project (version_library VERSION 0.0.1 LANGUAGES CXX)
+string(TIMESTAMP BUILD_DATE "%Y-%m-%dT%H:%M:%S")
+
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+############################################################
+# Create a library
+############################################################
+
+#Generate the static library from the library sources
+add_library(version_library STATIC 
+    src/version.cpp
+)
+
+target_include_directories(version_library
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include
+)
+
