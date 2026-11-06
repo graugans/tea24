@@ -65,18 +65,18 @@ auto main(int argc, char** argv) -> int
 
     printTheModuleShadow();
 
-    fmt::print("[{}] Value of bss {} address of bss {}",
+    fmt::println("[{}] Value of bss {} address of bss {}",
         __func__,
          bss, 
          fmt::ptr(&bss)
         );
-    /*
-    fmt::print("[{}] Value of bss2 {} address of bss2 {}",
+    
+    fmt::println("[{}] Value of bss2 {} address of bss2 {}",
         __func__,
          bss2, 
          fmt::ptr(&bss2)
         );
     
-    */
+
         return 0; /* exit gracefully*/
 }
