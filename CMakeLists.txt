@@ -63,6 +63,7 @@ include(cmake/Doxygen.cmake)
 add_subdirectory(exercise-000)
 add_subdirectory(exercise-001)
 add_subdirectory(exercise-002)
+add_subdirectory(exercise-003)
 
 # templates
 #add_subdirectory(templates)
