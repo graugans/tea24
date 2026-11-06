@@ -2,6 +2,7 @@
 #include <fmt/format.h>
 
 #include "config.h"
+#include "version/version.h"
 
 int main(int argc, char **argv) {
 
@@ -10,7 +11,8 @@ int main(int argc, char **argv) {
      * it is much more convenient than std::cout and printf
      * More info at https://fmt.dev/latest/api.html
      */
-    fmt::print("Hello, {}!\n", tea::PROJECT_NAME);
+    fmt::println("Hello, {}!", tea::PROJECT_NAME);
+    fmt::println("Hello, from the lib: {}!",projectName());
 
     /* INSERT YOUR CODE HERE */
 
