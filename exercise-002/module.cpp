@@ -9,6 +9,7 @@ int foo;
 int foo2 = 0;
 
 int bss;
+int bss2;
 
 /* .data Segment */
 int data = 45;
