@@ -1,0 +1,148 @@
+<svg width="1071pt" height="179pt" viewBox="0.00 0.00 1071.00 179.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 175)">
+<title>build</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-175 1066.63,-175 1066.63,4 -4,4"/>
+<!-- C&#45;Quellcode -->
+<g id="node1" class="node">
+<title>C-Quellcode</title>
+<polygon fill="none" stroke="black" points="104.32,-171 14.51,-171 10.51,-167 10.51,-135 100.32,-135 104.32,-139 104.32,-171"/>
+<polyline fill="none" stroke="black" points="100.32,-167 10.51,-167"/>
+<polyline fill="none" stroke="black" points="100.32,-167 100.32,-135"/>
+<polyline fill="none" stroke="black" points="100.32,-167 104.32,-171"/>
+<text xml:space="preserve" text-anchor="middle" x="57.42" y="-148.8" font-family="Helvetica,sans-Serif" font-size="14.00">C-Quellcode</text>
+</g>
+<!-- Präprozessor -->
+<g id="node6" class="node">
+<title>Präprozessor</title>
+<path fill="none" stroke="black" d="M259.08,-117C259.08,-117 162.83,-117 162.83,-117 156.83,-117 150.83,-111 150.83,-105 150.83,-105 150.83,-93 150.83,-93 150.83,-87 156.83,-81 162.83,-81 162.83,-81 259.08,-81 259.08,-81 265.08,-81 271.08,-87 271.08,-93 271.08,-93 271.08,-105 271.08,-105 271.08,-111 265.08,-117 259.08,-117"/>
+<text xml:space="preserve" text-anchor="middle" x="210.96" y="-94.8" font-family="Helvetica,sans-Serif" font-size="14.00">(1) Präprozessor</text>
+</g>
+<!-- C&#45;Quellcode&#45;&gt;Präprozessor -->
+<g id="edge5" class="edge">
+<title>C-Quellcode-&gt;Präprozessor</title>
+<path fill="none" stroke="black" d="M104.71,-136.5C118.16,-131.71 133.09,-126.39 147.37,-121.3"/>
+<polygon fill="black" stroke="black" points="148.46,-124.63 156.71,-117.98 146.11,-118.04 148.46,-124.63"/>
+</g>
+<!-- C++&#45;Quellcode -->
+<g id="node2" class="node">
+<title>C++-Quellcode</title>
+<polygon fill="none" stroke="black" points="112.5,-117 6.33,-117 2.33,-113 2.33,-81 108.5,-81 112.5,-85 112.5,-117"/>
+<polyline fill="none" stroke="black" points="108.5,-113 2.33,-113"/>
+<polyline fill="none" stroke="black" points="108.5,-113 108.5,-81"/>
+<polyline fill="none" stroke="black" points="108.5,-113 112.5,-117"/>
+<text xml:space="preserve" text-anchor="middle" x="57.42" y="-94.8" font-family="Helvetica,sans-Serif" font-size="14.00">C++-Quellcode</text>
+</g>
+<!-- C++&#45;Quellcode&#45;&gt;Präprozessor -->
+<g id="edge1" class="edge">
+<title>C++-Quellcode-&gt;Präprozessor</title>
+<path fill="none" stroke="black" d="M112.7,-99C121.2,-99 130.1,-99 138.91,-99"/>
+<polygon fill="black" stroke="black" points="138.89,-102.5 148.89,-99 138.89,-95.5 138.89,-102.5"/>
+</g>
+<!-- Header&#45;Dateien -->
+<g id="node3" class="node">
+<title>Header-Dateien</title>
+<polygon fill="none" stroke="black" points="114.83,-63 4,-63 0,-59 0,-27 110.83,-27 114.83,-31 114.83,-63"/>
+<polyline fill="none" stroke="black" points="110.83,-59 0,-59"/>
+<polyline fill="none" stroke="black" points="110.83,-59 110.83,-27"/>
+<polyline fill="none" stroke="black" points="110.83,-59 114.83,-63"/>
+<text xml:space="preserve" text-anchor="middle" x="57.42" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">Header-Dateien</text>
+</g>
+<!-- Header&#45;Dateien&#45;&gt;Präprozessor -->
+<g id="edge2" class="edge">
+<title>Header-Dateien-&gt;Präprozessor</title>
+<path fill="none" stroke="black" d="M110.14,-63.43C122.15,-67.71 135.05,-72.31 147.46,-76.73"/>
+<polygon fill="black" stroke="black" points="146.19,-79.99 156.78,-80.05 148.54,-73.4 146.19,-79.99"/>
+</g>
+<!-- Assembler&#45;Quellcode -->
+<g id="node4" class="node">
+<title>Assembler-Quellcode</title>
+<polygon fill="none" stroke="black" points="456.92,-63 311.08,-63 307.08,-59 307.08,-27 452.92,-27 456.92,-31 456.92,-63"/>
+<polyline fill="none" stroke="black" points="452.92,-59 307.08,-59"/>
+<polyline fill="none" stroke="black" points="452.92,-59 452.92,-27"/>
+<polyline fill="none" stroke="black" points="452.92,-59 456.92,-63"/>
+<text xml:space="preserve" text-anchor="middle" x="382" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">Assembler-Quellcode</text>
+</g>
+<!-- Assembler -->
+<g id="node8" class="node">
+<title>Assembler</title>
+<path fill="none" stroke="black" d="M584.05,-90C584.05,-90 504.92,-90 504.92,-90 498.92,-90 492.92,-84 492.92,-78 492.92,-78 492.92,-66 492.92,-66 492.92,-60 498.92,-54 504.92,-54 504.92,-54 584.05,-54 584.05,-54 590.05,-54 596.05,-60 596.05,-66 596.05,-66 596.05,-78 596.05,-78 596.05,-84 590.05,-90 584.05,-90"/>
+<text xml:space="preserve" text-anchor="middle" x="544.48" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">(3) Assembler</text>
+</g>
+<!-- Assembler&#45;Quellcode&#45;&gt;Assembler -->
+<g id="edge3" class="edge">
+<title>Assembler-Quellcode-&gt;Assembler</title>
+<path fill="none" stroke="black" d="M457.13,-57.47C465.19,-58.83 473.33,-60.2 481.22,-61.53"/>
+<polygon fill="black" stroke="black" points="480.64,-64.98 491.08,-63.18 481.8,-58.07 480.64,-64.98"/>
+</g>
+<!-- Linker&#45;Script -->
+<g id="node5" class="node">
+<title>Linker-Script</title>
+<polygon fill="none" stroke="black" stroke-dasharray="5,2" points="758.03,-36 669.45,-36 669.45,0 764.03,0 764.03,-30 758.03,-36"/>
+<polyline fill="none" stroke="black" stroke-dasharray="5,2" points="758.03,-36 758.03,-30"/>
+<polyline fill="none" stroke="black" stroke-dasharray="5,2" points="764.03,-30 758.03,-30"/>
+<text xml:space="preserve" text-anchor="middle" x="716.74" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00">Linker-Script</text>
+</g>
+<!-- Linker -->
+<g id="node9" class="node">
+<title>Linker</title>
+<path fill="none" stroke="black" d="M900.56,-63C900.56,-63 849.43,-63 849.43,-63 843.43,-63 837.43,-57 837.43,-51 837.43,-51 837.43,-39 837.43,-39 837.43,-33 843.43,-27 849.43,-27 849.43,-27 900.56,-27 900.56,-27 906.56,-27 912.56,-33 912.56,-39 912.56,-39 912.56,-51 912.56,-51 912.56,-57 906.56,-63 900.56,-63"/>
+<text xml:space="preserve" text-anchor="middle" x="875" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">(4) Linker</text>
+</g>
+<!-- Linker&#45;Script&#45;&gt;Linker -->
+<g id="edge4" class="edge">
+<title>Linker-Script-&gt;Linker</title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M764.2,-26.03C783.68,-29.39 806.32,-33.31 825.96,-36.7"/>
+<polygon fill="black" stroke="black" points="825.19,-40.12 835.64,-38.37 826.38,-33.22 825.19,-40.12"/>
+</g>
+<!-- Compiler -->
+<g id="node7" class="node">
+<title>Compiler</title>
+<path fill="none" stroke="black" d="M416.51,-117C416.51,-117 347.49,-117 347.49,-117 341.49,-117 335.49,-111 335.49,-105 335.49,-105 335.49,-93 335.49,-93 335.49,-87 341.49,-81 347.49,-81 347.49,-81 416.51,-81 416.51,-81 422.51,-81 428.51,-87 428.51,-93 428.51,-93 428.51,-105 428.51,-105 428.51,-111 422.51,-117 416.51,-117"/>
+<text xml:space="preserve" text-anchor="middle" x="382" y="-94.8" font-family="Helvetica,sans-Serif" font-size="14.00">(2) Compiler</text>
+</g>
+<!-- Präprozessor&#45;&gt;Compiler -->
+<g id="edge6" class="edge">
+<title>Präprozessor-&gt;Compiler</title>
+<path fill="none" stroke="black" d="M271.56,-99C288.55,-99 307.01,-99 323.85,-99"/>
+<polygon fill="black" stroke="black" points="323.7,-102.5 333.7,-99 323.7,-95.5 323.7,-102.5"/>
+</g>
+<!-- Compiler&#45;&gt;Assembler -->
+<g id="edge7" class="edge">
+<title>Compiler-&gt;Assembler</title>
+<path fill="none" stroke="black" d="M428.99,-91.26C445.25,-88.53 463.82,-85.4 481.2,-82.48"/>
+<polygon fill="black" stroke="black" points="481.64,-85.95 490.92,-80.84 480.48,-79.05 481.64,-85.95"/>
+</g>
+<!-- Objektcode -->
+<g id="node10" class="node">
+<title>Objektcode</title>
+<polygon fill="none" stroke="black" points="716.74,-90 632.05,-72 716.74,-54 801.43,-72 716.74,-90"/>
+<text xml:space="preserve" text-anchor="middle" x="716.74" y="-67.8" font-family="Helvetica,sans-Serif" font-size="14.00">Objektcode</text>
+</g>
+<!-- Assembler&#45;&gt;Objektcode -->
+<g id="edge8" class="edge">
+<title>Assembler-&gt;Objektcode</title>
+<path fill="none" stroke="black" d="M596.1,-72C603.28,-72 610.85,-72 618.56,-72"/>
+<polygon fill="black" stroke="black" points="618.41,-75.5 628.41,-72 618.41,-68.5 618.41,-75.5"/>
+</g>
+<!-- Maschinencode -->
+<g id="node11" class="node">
+<title>Maschinencode</title>
+<polygon fill="none" stroke="black" points="1056.63,-63 948.56,-63 948.56,-27 1062.63,-27 1062.63,-57 1056.63,-63"/>
+<polyline fill="none" stroke="black" points="1056.63,-63 1056.63,-57"/>
+<polyline fill="none" stroke="black" points="1062.63,-57 1056.63,-57"/>
+<text xml:space="preserve" text-anchor="middle" x="1005.59" y="-40.8" font-family="Helvetica,sans-Serif" font-size="14.00">Maschinencode</text>
+</g>
+<!-- Linker&#45;&gt;Maschinencode -->
+<g id="edge10" class="edge">
+<title>Linker-&gt;Maschinencode</title>
+<path fill="none" stroke="black" d="M912.85,-45C920.4,-45 928.57,-45 936.82,-45"/>
+<polygon fill="black" stroke="black" points="936.56,-48.5 946.56,-45 936.56,-41.5 936.56,-48.5"/>
+</g>
+<!-- Objektcode&#45;&gt;Linker -->
+<g id="edge9" class="edge">
+<title>Objektcode-&gt;Linker</title>
+<path fill="none" stroke="black" d="M765.05,-63.83C784.25,-60.51 806.42,-56.68 825.73,-53.34"/>
+<polygon fill="black" stroke="black" points="826.27,-56.8 835.53,-51.65 825.08,-49.9 826.27,-56.8"/>
+</g>
+</g>
+</svg>
