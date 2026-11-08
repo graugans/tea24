@@ -153,6 +153,19 @@ Benutze wieder die Dateien aus Teil B. Eine statische Bibliothek (`.a`) ist nich
 
 ![Statische Bibliothek mit ar bauen und Link-Reihenfolge](img/archive.svg)
 
+> **Was bedeutet `ar rcs`?** Die Optionen werden zusammengeschrieben, der Bindestrich ist bei `ar` optional (`ar rcs` = `ar -rcs`).
+>
+> | Option | Bedeutung |
+> |---|---|
+> | `r` | **r**eplace: `.o`-Dateien einfügen bzw. gleichnamige ersetzen |
+> | `c` | **c**reate: Archiv anlegen, ohne Warnung, falls es noch nicht existiert |
+> | `s` | **s**ymbol index: Symbolverzeichnis schreiben (wie `ranlib`), damit der Linker Symbole schnell findet |
+> | `t` | **t**able: Inhalt des Archivs auflisten |
+> | `x` | e**x**tract: `.o`-Dateien wieder auspacken |
+> | `d` | **d**elete: `.o`-Datei aus dem Archiv entfernen |
+>
+> Den mit `s` erzeugten Index zeigt `nm -s libgreet.a` an. Fehlt er, meldet der Linker *archive has no index; run ranlib to add one*.
+
 | Schritt | Befehl | Was ich sehe |
 |---|---|---|
 | 1. Archiv bauen | `ar rcs libgreet.a greet.o` |  |
