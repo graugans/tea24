@@ -1,0 +1,110 @@
+// Anatomie gemangelter Namen (Itanium C++ ABI – GCC & Clang auf Linux/ARM/RISC-V)
+// Alle Beispiele stammen aus `nm build/exercise-002/CMakeFiles/exercise-002.dir/*.o`
+digraph anatomy {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.4, nodesep=0.3, ranksep=0.35,
+           label=<<b>Name Mangling zerlegt:</b> so baut der Compiler aus C++-Namen eindeutige Linker-Symbole<br/><font point-size="11">Beispiele aus Übung 002 – Itanium C++ ABI (GCC/Clang)</font>>,
+           labelloc=t, fontsize=16];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+
+    legend [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#e0e0e0"><font face="Courier"><b>_Z</b></font></td><td align="left">Präfix: „das hier ist gemangelt“</td>
+            <td bgcolor="#fff59d"><font face="Courier"><b>11doSomething</b></font></td><td align="left">Länge + Name</td>
+            <td bgcolor="#e1bee7"><font face="Courier"><b>N … E</b></font></td><td align="left">verschachtelt (Namespace/Klasse)</td></tr>
+        <tr><td bgcolor="#e1bee7"><font face="Courier"><b>L</b></font></td><td align="left">interne Bindung (static)</td>
+            <td bgcolor="#e1bee7"><font face="Courier"><b>Z … E</b></font></td><td align="left">lokal in einer Funktion</td>
+            <td bgcolor="#e1bee7"><font face="Courier"><b>I … E</b></font></td><td align="left">Template-Argumente</td></tr>
+        <tr><td bgcolor="#bbdefb"><font face="Courier"><b>v b c i l d</b></font></td><td align="left">void bool char int long double</td>
+            <td bgcolor="#ffe0b2"><font face="Courier"><b>P K R</b></font></td><td align="left">Pointer, const, Referenz</td>
+            <td bgcolor="#c8e6c9"><font face="Courier"><b>St  S4_  T_</b></font></td><td align="left">std::, Wiederholung, Template-Typ</td></tr>
+      </table>>];
+
+    ex1 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="4" bgcolor="#424242" align="left"><font color="white"><b>① Freie Funktion</b>   void doSomething(int value);</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="13"><b>_Z</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>11doSomething</b></font></td>
+            <td bgcolor="#bbdefb"><font face="Courier" point-size="13"><b>i</b></font></td><td border="0"></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">11 Zeichen Name</font></td><td><font point-size="9">Parameter int</font></td>
+            <td border="0" align="left"><font point-size="9" color="#c62828">Rückgabetyp void fehlt!</font></td></tr>
+      </table>>];
+
+    ex2 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="5" bgcolor="#424242" align="left"><font color="white"><b>② Variable im Namespace</b>   namespace bonus4 { int a; }</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="13"><b>_Z</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>N</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>6bonus4</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>1a</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>E</b></font></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">Beginn<br/>Verschachtelung</font></td><td><font point-size="9">Namespace</font></td><td><font point-size="9">Name</font></td><td><font point-size="9">Ende</font></td></tr>
+      </table>>];
+
+    ex3 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="3" bgcolor="#424242" align="left"><font color="white"><b>③ static auf Modulebene</b>   static int moduleCounter;</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="13"><b>_Z</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>L</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>13moduleCounter</b></font></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">Local =<br/>interne Bindung</font></td><td><font point-size="9">Name</font></td></tr>
+      </table>>];
+
+    ex4 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="6" bgcolor="#424242" align="left"><font color="white"><b>④ Lokale static-Variable</b>   void doSomethingStatic() { static int value = 56; }</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="13"><b>_Z</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>Z</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>17doSomethingStatic</b></font></td>
+            <td bgcolor="#bbdefb"><font face="Courier" point-size="13"><b>v</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>E</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>5value</b></font></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">lokal in …</font></td><td><font point-size="9">Funktion</font></td><td><font point-size="9">(void) – keine<br/>Parameter</font></td><td><font point-size="9">Ende Funktion</font></td><td><font point-size="9">Variable</font></td></tr>
+      </table>>];
+
+    ex5 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="8" bgcolor="#424242" align="left"><font color="white"><b>⑤ Funktion im Namespace mit const-Pointer</b>   std::string_view tea::segmentOf(const void* address);</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="13"><b>_Z</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>N</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>3tea</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="13"><b>9segmentOf</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="13"><b>E</b></font></td>
+            <td bgcolor="#ffe0b2"><font face="Courier" point-size="13"><b>P</b></font></td>
+            <td bgcolor="#ffe0b2"><font face="Courier" point-size="13"><b>K</b></font></td>
+            <td bgcolor="#bbdefb"><font face="Courier" point-size="13"><b>v</b></font></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">nested</font></td><td><font point-size="9">tea::</font></td><td><font point-size="9">segmentOf</font></td><td><font point-size="9">Ende</font></td>
+            <td colspan="3"><font point-size="9">Pointer auf const void<br/>(von rechts nach links lesen!)</font></td></tr>
+      </table>>];
+
+    ex6 [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="10" bgcolor="#424242" align="left"><font color="white"><b>⑥ Template-Instanz (Profi-Level)</b>   tea::printVar&lt;int&gt;(std::string_view, std::string_view, std::string_view, const int&amp;)</font></td></tr>
+        <tr><td bgcolor="#e0e0e0"><font face="Courier" point-size="12"><b>_Z</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="12"><b>N</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="12"><b>3tea</b></font></td>
+            <td bgcolor="#fff59d"><font face="Courier" point-size="12"><b>8printVar</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="12"><b>IiE</b></font></td>
+            <td bgcolor="#e1bee7"><font face="Courier" point-size="12"><b>E</b></font></td>
+            <td bgcolor="#bbdefb"><font face="Courier" point-size="12"><b>v</b></font></td>
+            <td bgcolor="#c8e6c9"><font face="Courier" point-size="12"><b>St17basic_string_viewIcSt11char_traitsIcEE</b></font></td>
+            <td bgcolor="#c8e6c9"><font face="Courier" point-size="12"><b>S4_S4_</b></font></td>
+            <td bgcolor="#ffe0b2"><font face="Courier" point-size="12"><b>RKT_</b></font></td></tr>
+        <tr><td><font point-size="9">Präfix</font></td><td><font point-size="9">nested</font></td><td><font point-size="9">tea::</font></td><td><font point-size="9">printVar</font></td>
+            <td><font point-size="9">&lt;int&gt;</font></td><td><font point-size="9">Ende</font></td>
+            <td><font point-size="9">Rückgabe void<br/><b>(nur bei<br/>Templates!)</b></font></td>
+            <td><font point-size="9">1. Parameter:<br/>std::basic_string_view&lt;char, std::char_traits&lt;char&gt;&gt;</font></td>
+            <td><font point-size="9">2.+3. Parameter:<br/>„dasselbe wie<br/>Eintrag Nr. 4“</font></td>
+            <td><font point-size="9">const T&amp;<br/>(T = int)</font></td></tr>
+      </table>>];
+
+    nomangle [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#2e7d32" align="left"><font color="white"><b>Wird NICHT gemangelt</b> – Symbol = Name aus dem Quelltext</font></td></tr>
+        <tr><td><font face="Courier">main</font></td><td align="left">Sonderregel für main()</td></tr>
+        <tr><td><font face="Courier">data, foo, shadow</font></td><td align="left">globale Variable im globalen Namespace, nicht static</td></tr>
+        <tr><td><font face="Courier">etext, end, readSensor</font></td><td align="left">alles in <font face="Courier">extern "C"</font> (C-Linkage)</td></tr>
+      </table>>];
+
+    legend -> ex1 -> ex2 -> ex3 -> ex4 -> ex5 -> ex6 -> nomangle [style=invis];
+}

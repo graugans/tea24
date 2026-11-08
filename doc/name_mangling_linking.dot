@@ -1,0 +1,55 @@
+// Warum es Name Mangling gibt – und warum C-Code extern "C" braucht
+digraph linking {
+    rankdir=TB;
+    compound=true;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.4, nodesep=0.25, ranksep=0.8,
+           label=<<b>Der Linker vergleicht nur Zeichenketten</b> – Mangling packt Typen in den Namen, extern "C" schaltet es ab>,
+           labelloc=t, fontsize=16];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    /* ---------- Szenario A: Überladung ---------- */
+    subgraph cluster_a {
+        label=<<b>A – Überladung: fünf Funktionen namens f</b>>; style="rounded,filled"; fillcolor="#f5f5f5"; color="#9e9e9e"; fontsize=12;
+        src_a [shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier",
+               label="void f(int);\lvoid f(long);\lvoid f(double);\lvoid f(const char*);\lvoid f(int, int);\l"];
+        sym_a [shape=plaintext, style="", label=<
+          <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td bgcolor="#1565c0"><font color="white"><b>Symbol (nm)</b></font></td><td bgcolor="#1565c0"><font color="white"><b>c++filt</b></font></td></tr>
+            <tr><td bgcolor="#e3f2fd"><font face="Courier">_Z1fi</font></td><td align="left">f(int)</td></tr>
+            <tr><td bgcolor="#e3f2fd"><font face="Courier">_Z1fl</font></td><td align="left">f(long)</td></tr>
+            <tr><td bgcolor="#e3f2fd"><font face="Courier">_Z1fd</font></td><td align="left">f(double)</td></tr>
+            <tr><td bgcolor="#e3f2fd"><font face="Courier">_Z1fPKc</font></td><td align="left">f(char const*)</td></tr>
+            <tr><td bgcolor="#e3f2fd"><font face="Courier">_Z1fii</font></td><td align="left">f(int, int)</td></tr>
+          </table>>];
+        src_a -> sym_a [label="clang++ -c"];
+    }
+
+    /* ---------- Szenario B: C-Bibliothek ohne extern "C" ---------- */
+    subgraph cluster_b {
+        label=<<b>B – C-Bibliothek aus C++ aufrufen, OHNE extern "C"</b>>; style="rounded,filled"; fillcolor="#ffebee"; color="#c62828"; fontsize=12;
+        c_src_b  [shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier", label="// sensor.c  (C-Compiler)\lint readSensor(int ch)\l{ ... }\l"];
+        cpp_src_b[shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier", label="// main.cpp  (C++-Compiler)\lint readSensor(int ch);\lreadSensor(1);\l"];
+        c_obj_b  [fillcolor="white", color="#616161", fontname="Courier", label="sensor.o\nT readSensor"];
+        cpp_obj_b[fillcolor="white", color="#616161", fontname="Courier", label="main.o\nU _Z10readSensori"];
+        err_b    [fillcolor="#ffcdd2", color="#c62828", label="ld: undefined reference to\n`readSensor(int)'"];
+        c_src_b -> c_obj_b;  cpp_src_b -> cpp_obj_b;
+        cpp_obj_b -> err_b [color="#c62828"];
+        c_obj_b -> err_b [color="#c62828", style=dashed, arrowhead=tee, label="readSensor ≠\n_Z10readSensori"];
+    }
+
+    /* ---------- Szenario C: mit extern "C" ---------- */
+    subgraph cluster_c {
+        label=<<b>C – derselbe Aufruf MIT extern "C" im Header</b>>; style="rounded,filled"; fillcolor="#e8f5e9"; color="#2e7d32"; fontsize=12;
+        hdr_c    [shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier",
+                  label="// sensor.h\l#ifdef __cplusplus\lextern \"C\" {\l#endif\lint readSensor(int ch);\l#ifdef __cplusplus\l}\l#endif\l"];
+        c_obj_c  [fillcolor="white", color="#616161", fontname="Courier", label="sensor.o\nT readSensor"];
+        cpp_obj_c[fillcolor="white", color="#616161", fontname="Courier", label="main.o\nU readSensor"];
+        ok_c     [fillcolor="#c8e6c9", color="#2e7d32", label="Link OK"];
+        hdr_c -> cpp_obj_c [label="#include in main.cpp"];
+        cpp_obj_c -> ok_c [color="#2e7d32"]; c_obj_c -> ok_c [color="#2e7d32", label="gleiche Zeichenkette"];
+    }
+
+    sym_a -> cpp_src_b [style=invis];
+    err_b -> hdr_c [style=invis];
+}

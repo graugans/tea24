@@ -59,6 +59,10 @@ include(cmake/StaticAnalyzers.cmake)
 # enable doxygen
 include(cmake/Doxygen.cmake)
 
+# Graphviz diagrams (*.dot -> *.svg), see cmake/Diagrams.cmake
+include(cmake/Diagrams.cmake)
+add_graphviz_diagrams(doc-diagrams "${CMAKE_CURRENT_SOURCE_DIR}/doc")
+
 # Exercises & solutions
 add_subdirectory(exercise-000)
 add_subdirectory(exercise-001)

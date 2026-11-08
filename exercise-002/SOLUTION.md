@@ -189,7 +189,8 @@ herausgibt, hat es diese Entscheidung selbst getroffen. (Wer nur Lesezugriff erl
 nm -SC ./build/bin/exercise-002
 ```
 
-Das `-C` (demangle) wird benötigt, um das **Name Mangling** von C++ aufzulösen:
+Das `-C` (demangle) wird benötigt, um das **Name Mangling** von C++ aufzulösen. Eine ausführliche Erklärung samt
+Grafik steht in der [Projekt-README](../README.md#name-mangling-in-c):
 
 | ohne `-C` | mit `-C` |
 | --- | --- |

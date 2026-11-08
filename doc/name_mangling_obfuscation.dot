@@ -1,0 +1,49 @@
+// Ist Name Mangling Verschleierung? Nein – was in exercise-002 wirklich sichtbar bleibt
+digraph obfuscation {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.4, nodesep=0.35, ranksep=0.7,
+           label=<<b>Name Mangling ist Kodierung, keine Verschleierung</b><br/><font point-size="11">gemessen an build/bin/exercise-002 (Debug-Build)</font>>,
+           labelloc=t, fontsize=16];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    src [shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier",
+         label="namespace tea {\ltemplate <typename T>\lvoid printVar(std::string_view,\l              std::string_view,\l              std::string_view,\l              const T&);\l}\l"];
+    mangled [fillcolor="#e3f2fd", color="#1565c0", fontname="Courier",
+             label="_ZN3tea8printVarIiEEvSt17basic_string_view\lIcSt11char_traitsIcEES4_S4_RKT_\l"];
+    back [fillcolor="#e3f2fd", color="#1565c0", fontname="Courier",
+          label="void tea::printVar<int>(\l  std::basic_string_view<char, …>, … ,\l  int const&)\l"];
+
+    src -> mangled [label="Compiler\n(deterministisch,\nstandardisiert)"];
+    mangled -> back [label="c++filt / nm -C\n(sofort, ohne Schlüssel)", color="#c62828", fontcolor="#c62828", penwidth=2];
+
+    full [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#e65100"><font color="white"><b>Debug-Build (-g)</b>  204 KB</font></td></tr>
+        <tr><td align="left">Symboltabelle</td><td align="left">168 Symbole, alle Funktionen &amp; Variablen</td></tr>
+        <tr><td align="left">DWARF-Debuginfo</td><td align="left">8 .debug_*-Sektionen: Typen, Zeilennummern,<br align="left"/>sogar Namen lokaler Variablen</td></tr>
+      </table>>];
+    stripped [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#2e7d32"><font color="white"><b>nach strip</b>  35 KB</font></td></tr>
+        <tr><td align="left">nm</td><td align="left">„no symbols“ – eigene Namen weg ✓</td></tr>
+        <tr><td align="left" bgcolor="#ffebee">nm -D</td><td align="left" bgcolor="#ffebee">29 dynamische Symbole bleiben: z. B.<br align="left"/><font face="Courier">fmt::v12::vprintln(_IO_FILE*, …)</font><br align="left"/>→ Bibliothek, Version, Signatur</td></tr>
+        <tr><td align="left" bgcolor="#ffebee">strings</td><td align="left" bgcolor="#ffebee"><font face="Courier">doSomethingStatic, printModuleStaticValues</font><br align="left"/>→ über <font face="Courier">__func__</font> im Klartext eingebaut!</td></tr>
+        <tr><td align="left" bgcolor="#ffebee">objdump -d</td><td align="left" bgcolor="#ffebee">der komplette Maschinencode</td></tr>
+      </table>>];
+
+    back -> full [style=invis];
+    full -> stripped [label="strip", penwidth=2];
+
+    hide [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+      <b>Was Symbole tatsächlich reduziert</b><br align="left"/>
+      • Release-Build ohne <font face="Courier">-g</font>, danach <font face="Courier">strip</font><br align="left"/>
+      • <font face="Courier">static</font> / anonymer Namespace, <font face="Courier">-fvisibility=hidden</font><br align="left"/>
+      • keine Namen in Log-Strings (<font face="Courier">__func__</font>, <font face="Courier">assert</font>)<br align="left"/>
+      • LTO (<font face="Courier">-flto</font>): inlined Funktionen verschwinden<br align="left"/>
+      <br align="left"/>
+      <b>Aber:</b> Der Code selbst bleibt lesbar (Ghidra, IDA, objdump).<br align="left"/>
+      Schutz von Geheimnissen nie über unleserliche Namen,<br align="left"/>
+      sondern über Kryptografie &amp; Hardware (Secure Boot, Readout-Protection).<br align="left"/>>];
+    stripped -> hide [style=dashed, arrowhead=none];
+}

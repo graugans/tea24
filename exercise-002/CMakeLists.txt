@@ -42,20 +42,4 @@ add_custom_command(TARGET ${PROJECT_NAME}
 
 # Diagrams for SOLUTION.md (optional, needs Graphviz):
 #   cmake --build build --target exercise-002-diagrams
-find_program(DOT_EXECUTABLE dot)
-if(DOT_EXECUTABLE)
-    file(GLOB DIAGRAM_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/doc/*.dot")
-    set(DIAGRAM_OUTPUTS "")
-    foreach(dot_file ${DIAGRAM_SOURCES})
-        get_filename_component(name ${dot_file} NAME_WE)
-        set(svg_file "${CMAKE_CURRENT_SOURCE_DIR}/doc/${name}.svg")
-        add_custom_command(
-            OUTPUT  ${svg_file}
-            COMMAND ${DOT_EXECUTABLE} -Tsvg ${dot_file} -o ${svg_file}
-            DEPENDS ${dot_file}
-            COMMENT "Rendering ${name}.svg"
-        )
-        list(APPEND DIAGRAM_OUTPUTS ${svg_file})
-    endforeach()
-    add_custom_target(${PROJECT_NAME}-diagrams DEPENDS ${DIAGRAM_OUTPUTS})
-endif()
+add_graphviz_diagrams(${PROJECT_NAME}-diagrams "${CMAKE_CURRENT_SOURCE_DIR}/doc")
