@@ -1,0 +1,39 @@
+// Linker-Sicht: externe vs. interne Bindung, am Beispiel shadow (Bonus 1) und moduleCounter (Teil 2)
+digraph linkage {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=1.2,
+           label="Was der Linker sieht: Großbuchstaben (D/B/R) sind global, Kleinbuchstaben (d/b/r) bleiben in ihrer Objektdatei",
+           labelloc=t, fontsize=14];
+    node [fontname="Helvetica", fontsize=11, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9];
+
+    main_o [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#1565c0"><font color="white"><b>main.cpp.o</b></font></td></tr>
+        <tr><td bgcolor="#ffe0b2"><b>D</b></td><td port="shadow" align="left">shadow = 11</td></tr>
+        <tr><td bgcolor="#eeeeee"><b>U</b></td><td port="foo" align="left">foo</td></tr>
+        <tr><td bgcolor="#eeeeee"><b>U</b></td><td port="data" align="left">data</td></tr>
+        <tr><td bgcolor="#eeeeee"><b>U</b></td><td port="rodata" align="left">rodata</td></tr>
+        <tr><td bgcolor="#eeeeee"><b>U</b></td><td port="get" align="left">getModuleCounterPtr()</td></tr>
+      </table>>];
+
+    module_o [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#1565c0"><font color="white"><b>module.cpp.o</b></font></td></tr>
+        <tr><td bgcolor="#c8e6c9" port="foo"><b>B</b></td><td align="left">foo</td></tr>
+        <tr><td bgcolor="#ffe0b2" port="data"><b>D</b></td><td align="left">data = 45</td></tr>
+        <tr><td bgcolor="#bbdefb" port="rodata"><b>R</b></td><td align="left">rodata = 45</td></tr>
+        <tr><td bgcolor="#e0e0e0" port="get"><b>T</b></td><td align="left">getModuleCounterPtr()</td></tr>
+        <tr><td colspan="2" bgcolor="#fafafa"><font color="#757575" point-size="9">── nur intern (static) ──</font></td></tr>
+        <tr><td bgcolor="#ffe0b2" port="shadow"><b>d</b></td><td align="left">shadow = 42</td></tr>
+        <tr><td bgcolor="#c8e6c9" port="mc"><b>b</b></td><td align="left">moduleCounter <font color="#6a1b9a" point-size="9">(→ Grafik 07)</font></td></tr>
+        <tr><td bgcolor="#ffe0b2"><b>d</b></td><td align="left">moduleValue</td></tr>
+        <tr><td bgcolor="#bbdefb"><b>r</b></td><td align="left">moduleConst, bonus4::d</td></tr>
+      </table>>];
+
+    main_o:foo:e -> module_o:foo:w    [color="#2e7d32", label="U → Definition"];
+    main_o:data:e -> module_o:data:w   [color="#e65100"];
+    main_o:rodata:e -> module_o:rodata:w [color="#1565c0"];
+    main_o:get:e -> module_o:get:w    [color="#616161"];
+    main_o:shadow:e -> module_o:shadow:w [color="#c62828", style=dashed, arrowhead=tee, label="kein Konflikt:\nd ist für den Linker unsichtbar"];
+}

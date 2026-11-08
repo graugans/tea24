@@ -1,0 +1,26 @@
+// Teil 2, Frage: Was passiert bei einem Pointer auf eine modulstatische Variable?
+digraph name_vs_storage {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.9,
+           label="static schützt den NAMEN, nicht den SPEICHER",
+           labelloc=t, fontsize=14];
+    node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=10];
+
+    subgraph cluster_main {
+        label="main.cpp"; style="rounded,filled"; fillcolor="#fffde7"; color="#f9a825";
+        direct [label="moduleCounter = 1000;", fillcolor="white", color="#c62828", fontname="Courier"];
+        viaptr [label="int* counter = getModuleCounterPtr();\l*counter = 1000;\l", fillcolor="white", color="#2e7d32", fontname="Courier"];
+    }
+    subgraph cluster_module {
+        label="module.cpp"; style="rounded,filled"; fillcolor="#e3f2fd"; color="#1565c0";
+        getter [label="int* getModuleCounterPtr()\l{ return &moduleCounter; }\l", fillcolor="white", fontname="Courier"];
+        mc     [label="static int moduleCounter;\n.bss (b) @ nm 0x9100\n2 → 1000 → 1001", fillcolor="#c8e6c9", color="#2e7d32"];
+    }
+
+    direct -> mc     [color="#c62828", fontcolor="#c62828", style=dashed, arrowhead=tee,
+                      label="error: use of undeclared\nidentifier 'moduleCounter'"];
+    viaptr -> getter [color="#2e7d32", label="externe Funktion"];
+    getter -> mc     [color="#2e7d32", label="Adresse"];
+    viaptr -> mc     [color="#2e7d32", style=bold, fontcolor="#2e7d32", label="Schreibzugriff klappt!", constraint=false];
+}

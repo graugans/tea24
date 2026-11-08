@@ -1,0 +1,31 @@
+// Include-Graph von Übung 002 – wer inkludiert wen, und wo greift der Include Guard?
+digraph includes {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.5,
+           label="Include-Graph: bonus_config.h kommt in module.cpp zweimal an – der Guard verhindert die Doppel-Definition",
+           labelloc=t, fontsize=14];
+    node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#fff9c4", color="#827717"];
+    edge [fontname="Helvetica", fontsize=9, color="#616161"];
+
+    main_cpp   [label="main.cpp",   fillcolor="#ffe082"];
+    module_cpp [label="module.cpp", fillcolor="#ffe082"];
+    config_h   [label="config.h"];
+    module_h   [label="module.h\n#ifndef …_002_MODULE_H"];
+    helper_h   [label="helper.h\n#ifndef …_002_HELPER_H"];
+    bonus_h    [label="bonus_config.h\n#ifndef …_002_BONUS_CONFIG_H\nconstexpr int BONUS_MAGIC = 4711;", fillcolor="#ffccbc", color="#bf360c"];
+    fmt_h      [label="<fmt/format.h>", fillcolor="#eeeeee", color="#757575"];
+
+    main_cpp   -> config_h;
+    main_cpp   -> module_h;
+    main_cpp   -> fmt_h;
+    module_cpp -> module_h;
+    module_cpp -> fmt_h;
+    module_cpp -> bonus_h [color="#bf360c", fontcolor="#bf360c", penwidth=2, label="  2. Mal: Guard ist schon\l  definiert → Inhalt übersprungen\l"];
+    module_h   -> bonus_h [label="1. Mal"];
+    module_h   -> helper_h;
+    helper_h   -> fmt_h;
+
+    note [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", fontsize=10,
+          label="Vorher (Copy-&-Paste-Falle):\lhelper.h  → WORKSPACES_TEA24_EXERCISE_002_MODULE_H\lmodule.h  → WORKSPACES_TEA22_EXERCISE_003_MODULE_H\l\lHätte man nur module.h „korrigiert“, wären beide\lGuards identisch gewesen: helper.h definiert das\lMakro zuerst → der komplette Inhalt von module.h\lwird still übersprungen →\l„use of undeclared identifier …“\l"];
+    helper_h -> note [style=invis];
+}

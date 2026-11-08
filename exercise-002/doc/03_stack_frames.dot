@@ -1,0 +1,45 @@
+// Teil 1: Was passiert beim (rekursiven) Aufruf von doSomethingStatic()?
+digraph stack {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.6, ranksep=1.0,
+           label="Teil 1: Jeder Aufruf bekommt einen eigenen Stack Frame – value (static) gibt es nur ein einziges Mal",
+           labelloc=t, fontsize=14];
+    node [fontname="Helvetica", fontsize=11, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9];
+
+    stack [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="6">
+        <tr><td bgcolor="#6a1b9a"><font color="white"><b>Stack</b> (hohe Adressen oben)</font></td></tr>
+        <tr><td bgcolor="#f3e5f5" align="left">Frame <b>main()</b></td></tr>
+        <tr><td bgcolor="#e1bee7" align="left" port="f1">Frame <b>doSomethingStatic()</b> – 1. Ebene<br/>
+            nonStatic = 42 @ 0x7fffe5d81<b>ae8</b></td></tr>
+        <tr><td bgcolor="#ce93d8" align="left" port="f2">Frame <b>doSomethingStatic()</b> – rekursiv<br/>
+            nonStatic = 42 @ 0x7fffe5d81<b>a18</b></td></tr>
+        <tr><td bgcolor="#fafafa"><font color="#9e9e9e">↓ wächst nach unten (frei)</font></td></tr>
+      </table>>];
+
+    data [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="6">
+        <tr><td bgcolor="#e65100"><font color="white"><b>.data</b></font></td></tr>
+        <tr><td bgcolor="#ffe0b2" port="v" align="left">doSomethingStatic()::value<br/>
+            @ 0x555d055a2<b>0d4</b> (nm 0x90d4)<br/>56 → 57 → 58</td></tr>
+      </table>>];
+    bss [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="6">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>.bss</b></font></td></tr>
+        <tr><td bgcolor="#c8e6c9" port="o" align="left">doSomethingStatic()::once<br/>false → true</td></tr>
+      </table>>];
+
+    timeline [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#eeeeee"><b>Aufruf</b></td><td bgcolor="#eeeeee"><b>value</b></td><td bgcolor="#eeeeee"><b>nonStatic</b></td><td bgcolor="#eeeeee"><b>Adresse nonStatic</b></td></tr>
+        <tr><td>main → 1. Aufruf</td><td>56</td><td>42</td><td>…ae8</td></tr>
+        <tr><td>  ↳ rekursiv</td><td>57</td><td>42</td><td>…a18  (0xd0 = 208 B tiefer)</td></tr>
+        <tr><td>main → 2. Aufruf</td><td>58</td><td>42</td><td>…ae8  (Frame wiederverwendet)</td></tr>
+      </table>>];
+
+    stack:f1 -> data:v [color="#e65100", label="value++"];
+    stack:f2 -> data:v [color="#e65100", label="dieselbe Variable!"];
+    stack:f1 -> bss:o  [color="#2e7d32", style=dashed, label="once = true\n→ nur einmal Rekursion"];
+    data -> timeline [style=invis];
+}

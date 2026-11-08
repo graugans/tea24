@@ -1,0 +1,52 @@
+// Memory Map von exercise-002 (Offsets aus `nm -SC`, identisch mit der Programmausgabe "(nm 0x…)")
+digraph memmap {
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3,
+           label="Memory Map (Debug-Build, clang 22, GNU ld) – Laufzeitadresse = Ladeadresse (ASLR) + nm-Offset",
+           labelloc=t, fontsize=14];
+    node [fontname="Courier", fontsize=10, shape=plaintext];
+
+    map [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#424242"><font color="white"><b>Offset</b></font></td>
+            <td bgcolor="#424242"><font color="white"><b>Segment</b></font></td>
+            <td bgcolor="#424242"><font color="white"><b>nm</b></font></td>
+            <td bgcolor="#424242"><font color="white"><b>Symbol</b></font></td>
+            <td bgcolor="#424242"><font color="white"><b>Wert</b></font></td></tr>
+
+        <tr><td bgcolor="#f3e5f5">0x7fff…ae8</td><td bgcolor="#e1bee7" rowspan="2"><b>Stack</b><br/>(ganz woanders)</td><td bgcolor="#f3e5f5">–</td><td bgcolor="#f3e5f5" align="left">doSomethingStatic: nonStatic</td><td bgcolor="#f3e5f5">42</td></tr>
+        <tr><td bgcolor="#f3e5f5">0x7fff…a18</td><td bgcolor="#f3e5f5">–</td><td bgcolor="#f3e5f5" align="left">nonStatic (rekursiv)</td><td bgcolor="#f3e5f5">42</td></tr>
+        <tr><td colspan="5" bgcolor="#fafafa"><font color="#9e9e9e">··· riesige Lücke (Heap, Shared Libraries wie libfmt.so) ···</font></td></tr>
+
+        <tr><td bgcolor="#e8f5e9">0x9108</td><td bgcolor="#a5d6a7" rowspan="9"><b>.bss</b><br/>0x90e0 – 0x9108<br/>40 Byte<br/>NOBITS:<br/>kein Platz<br/>in der Datei</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left"><i>end</i></td><td bgcolor="#e8f5e9"></td></tr>
+        <tr><td bgcolor="#e8f5e9">0x9100</td><td bgcolor="#e8f5e9">b</td><td bgcolor="#e8f5e9" align="left">moduleCounter (static)</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90fc</td><td bgcolor="#e8f5e9">b</td><td bgcolor="#e8f5e9" align="left">doSomethingStatic()::once</td><td bgcolor="#e8f5e9">false</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90f8</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left">bonus4::b</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90f4</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left">bonus4::a</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90ec</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left">bss, bss2</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90e8</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left">foo2 (= 0 !)</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90e4</td><td bgcolor="#e8f5e9">B</td><td bgcolor="#e8f5e9" align="left">foo</td><td bgcolor="#e8f5e9">0</td></tr>
+        <tr><td bgcolor="#e8f5e9">0x90e0</td><td bgcolor="#e8f5e9">D</td><td bgcolor="#e8f5e9" align="left"><i>edata / __bss_start</i></td><td bgcolor="#e8f5e9"></td></tr>
+
+        <tr><td bgcolor="#fff3e0">0x90dc</td><td bgcolor="#ffcc80" rowspan="8"><b>.data</b><br/>0x90a8 – 0x90e0<br/>56 Byte</td><td bgcolor="#fff3e0">d</td><td bgcolor="#fff3e0" align="left">shadow (static, module)</td><td bgcolor="#fff3e0">42</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90d8</td><td bgcolor="#fff3e0">d</td><td bgcolor="#fff3e0" align="left">moduleValue (static)</td><td bgcolor="#fff3e0">123</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90d4</td><td bgcolor="#fff3e0">d</td><td bgcolor="#fff3e0" align="left">doSomethingStatic()::value</td><td bgcolor="#fff3e0">56</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90d0</td><td bgcolor="#fff3e0">D</td><td bgcolor="#fff3e0" align="left">bonus4::c</td><td bgcolor="#fff3e0">1</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90cc</td><td bgcolor="#fff3e0">D</td><td bgcolor="#fff3e0" align="left">data2</td><td bgcolor="#fff3e0">43</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90c8</td><td bgcolor="#fff3e0">D</td><td bgcolor="#fff3e0" align="left">data</td><td bgcolor="#fff3e0">45</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90b8</td><td bgcolor="#fff3e0">D</td><td bgcolor="#fff3e0" align="left">shadow (global, main)</td><td bgcolor="#fff3e0">11</td></tr>
+        <tr><td bgcolor="#fff3e0">0x90a8</td><td bgcolor="#fff3e0">D</td><td bgcolor="#fff3e0" align="left"><i>__data_start</i></td><td bgcolor="#fff3e0"></td></tr>
+
+        <tr><td colspan="5" bgcolor="#fafafa"><font color="#9e9e9e">··· .eh_frame, .init_array, .data.rel.ro, .dynamic, .got ···</font></td></tr>
+
+        <tr><td bgcolor="#e3f2fd">0x6584</td><td bgcolor="#90caf9" rowspan="5"><b>.rodata</b><br/>ab 0x6000<br/>schreib-<br/>geschützt</td><td bgcolor="#e3f2fd">r</td><td bgcolor="#e3f2fd" align="left">bonus4::d (const)</td><td bgcolor="#e3f2fd">1</td></tr>
+        <tr><td bgcolor="#e3f2fd">0x6580</td><td bgcolor="#e3f2fd">r</td><td bgcolor="#e3f2fd" align="left">moduleConst (static const)</td><td bgcolor="#e3f2fd">77</td></tr>
+        <tr><td bgcolor="#e3f2fd">0x6578</td><td bgcolor="#e3f2fd">R</td><td bgcolor="#e3f2fd" align="left">big_data_blob[2]</td><td bgcolor="#e3f2fd">{42, 255}</td></tr>
+        <tr><td bgcolor="#e3f2fd">0x6574</td><td bgcolor="#e3f2fd">R</td><td bgcolor="#e3f2fd" align="left">rodata2</td><td bgcolor="#e3f2fd">43</td></tr>
+        <tr><td bgcolor="#e3f2fd">0x6570</td><td bgcolor="#e3f2fd">R</td><td bgcolor="#e3f2fd" align="left">rodata</td><td bgcolor="#e3f2fd">45</td></tr>
+
+        <tr><td bgcolor="#f5f5f5">0x5489</td><td bgcolor="#e0e0e0" rowspan="2"><b>.text</b><br/>Code</td><td bgcolor="#f5f5f5">T</td><td bgcolor="#f5f5f5" align="left"><i>etext</i> (Ende .text)</td><td bgcolor="#f5f5f5"></td></tr>
+        <tr><td bgcolor="#f5f5f5">0x4720</td><td bgcolor="#f5f5f5">T</td><td bgcolor="#f5f5f5" align="left">getModuleCounterPtr() …</td><td bgcolor="#f5f5f5"></td></tr>
+        <tr><td bgcolor="#f5f5f5">0x0000</td><td bgcolor="#eeeeee">ELF-Header</td><td bgcolor="#f5f5f5">R</td><td bgcolor="#f5f5f5" align="left"><i>__executable_start</i></td><td bgcolor="#f5f5f5"></td></tr>
+        <tr><td colspan="5" bgcolor="#fafafa"><font color="#c62828">moduleConstUnused – existiert nicht: nie benutzt, kein Symbol, kein Byte</font></td></tr>
+      </table>>];
+}

@@ -1,82 +1,62 @@
-#include <fmt/chrono.h>
 #include <fmt/format.h>
 
+#include "config.h"
 #include "module.h"
 
+/* Bonus 1: externe Bindung – gleicher Name wie das `static int shadow` in module.cpp.
+ * Kein Linkerfehler, weil das static-shadow den Linker nie erreicht. */
 int shadow = 11;
 
-auto main(int argc, char** argv) -> int
+auto main() -> int
 {
-    /*
-    fmt::print("Hello, {}!\n", argv[0]);
+    fmt::println("{} {} – static, Sichtbarkeit & Speichersegmente", tea::PROJECT_NAME, tea::PROJECT_VER);
+    fmt::println("Programm geladen ab {} (ASLR: bei jedem Start anders!)", fmt::ptr(__executable_start));
 
-    doSomething(42);
-    int bar = 42;
-    doSomething(bar);
-    fmt::print("The value of bar is: {}\n", bar);
+    /* ------------------------------------------------------------------ */
+    tea::printHeading("Teil 1: static innerhalb einer Funktion");
+    doSomethingStatic();  // 1. Aufruf: ruft sich einmal selbst auf
+    doSomethingStatic();  // 2. Aufruf: value zählt weiter, nonStatic beginnt wieder bei 42
 
-    doSomethingPtr(&bar);
-    fmt::print("The value of bar after doSomethingPtr is: {}\n", bar);
-
-    int* returnedPtr = doReturnAPtr();
-    fmt::print("The value of returnedPtr content  after doReturnAPtr is: {}\n", *returnedPtr);
-    doSomething(42);
-    fmt::print("The value of returnedPtr content  after doReturnAPtr is: {}\n", *returnedPtr);
-    */
-    doSomethingStatic();
-/*
-    doSomethingStatic();
-    doSomethingStatic();
-    doSomethingStatic();
-*/
-/*
-    fmt::print("Value of data {} address of data {}\n", data, fmt::ptr(&data));
-    fmt::print("Value of data2 {} address of data2 {}\n", data2, fmt::ptr(&data2));
-    fmt::print("Value of rodata {} address of rodata {}\n", rodata, fmt::ptr(&rodata));
-    fmt::print("Value of rodata2 {} address of rodata2 {}\n", rodata2, fmt::ptr(&rodata2));
-
-    int var;
-    static int var2;
-    fmt::print("Value of var {} address of var {}\n", var, fmt::ptr(&var));
-    fmt::print("Value of var2 {} address of var2 {}\n", var2, fmt::ptr(&var2));
-
-    fmt::print("Sizeof Big Data Blob {} address {}\n", sizeof(big_data_blob), fmt::ptr(big_data_blob));
-
-    const int* array_ptr = big_data_blob;
-    fmt::print("Sizeof Big Data Blob {} address {}\n", sizeof(array_ptr), fmt::ptr(array_ptr));
-
-    fmt::print("array_ptr[0] {}\n", array_ptr[0]);
-    fmt::print("big_data_blob[0] {}\n", big_data_blob[0]);
-*/
-
+    /* ------------------------------------------------------------------ */
+    tea::printHeading("Teil 2: static auf Modulebene");
     printModuleStaticValues();
     printModuleStaticValues();
 
+    /* moduleCounter = 1000;   // error: use of undeclared identifier 'moduleCounter'  */
+    int* counter = getModuleCounterPtr();
+    *counter = 1000;
+    fmt::println("[{:<24}] *getModuleCounterPtr() = 1000  -> Name privat, Speicher nicht!", __func__);
+    printModuleStaticValues();
+
+    /* ------------------------------------------------------------------ */
+    tea::printHeading("Teil 3: In welchem Segment landen die Variablen?");
     printTheBSSStuff();
-    fmt::print("Value of foo {} address of foo {}\n", foo, fmt::ptr(&foo));
-    fmt::print("Value of foo2 {} address of foo2 {}\n", foo2, fmt::ptr(&foo2));
 
-    fmt::println(
-        "[{}] Value of shadow {} address of shadow {}",
-        __func__,
-         shadow, 
-         fmt::ptr(&shadow)
-        );
+    /* dieselben Objekte aus einer anderen Übersetzungseinheit – gleiche Adressen */
+    tea::printVar(__func__, "foo", ".bss", foo);
+    tea::printVar(__func__, "foo2", ".bss", foo2);
+    tea::printVar(__func__, "bss", ".bss", bss);
+    tea::printVar(__func__, "bss2", ".bss", bss2);
+    tea::printVar(__func__, "data", ".data", data);
+    tea::printVar(__func__, "data2", ".data", data2);
+    tea::printVar(__func__, "rodata", ".rodata", rodata);
+    tea::printVar(__func__, "rodata2", ".rodata", rodata2);
+    tea::printVar(__func__, "big_data_blob[0]", ".rodata", big_data_blob[0]);
 
+    fmt::println("\nSegmentgrenzen laut Linker (nm-Offset):");
+    fmt::println("  .text   endet bei   {:#06x}  (etext)", tea::imageOffset(etext));
+    fmt::println("  .data   beginnt bei {:#06x}  (__data_start)", tea::imageOffset(__data_start));
+    fmt::println("  .bss    beginnt bei {:#06x}  (edata)", tea::imageOffset(edata));
+    fmt::println("  .bss    endet bei   {:#06x}  (end)", tea::imageOffset(end));
+
+    /* ------------------------------------------------------------------ */
+    tea::printHeading("Bonus 1: gleichnamige Variablen in main.cpp und module.cpp");
+    tea::printVar(__func__, "shadow (global, main)", ".data", shadow);
     printTheModuleShadow();
 
-    fmt::println("[{}] Value of bss {} address of bss {}",
-        __func__,
-         bss, 
-         fmt::ptr(&bss)
-        );
-    
-    fmt::println("[{}] Value of bss2 {} address of bss2 {}",
-        __func__,
-         bss2, 
-         fmt::ptr(&bss2)
-        );
-    
+    /* ------------------------------------------------------------------ */
+    tea::printHeading("Bonus 4: Null- und Nicht-Null-Initialisierung");
+    printBonusSegments();
 
-        return 0; /* exit gracefully*/
+    return 0; /* exit gracefully*/
 }

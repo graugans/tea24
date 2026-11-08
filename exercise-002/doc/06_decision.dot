@@ -1,0 +1,35 @@
+// Entscheidungsbaum: In welchem Segment landet meine Variable?
+digraph decision {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.45,
+           label="Wo landet meine Variable? (typisches Verhalten von GCC/Clang auf ELF-Systemen)",
+           labelloc=t, fontsize=14];
+    node [fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=10];
+
+    start [label="Variable", shape=oval, style=filled, fillcolor="#fff9c4"];
+    q_dur [label="Lokal in einer Funktion\nund NICHT static?", shape=diamond, style=filled, fillcolor="#f5f5f5"];
+    q_const [label="const / constexpr?", shape=diamond, style=filled, fillcolor="#f5f5f5"];
+    q_used [label="Adresse benutzt\n(&x, Referenz,\nextern)?", shape=diamond, style=filled, fillcolor="#f5f5f5"];
+    q_zero [label="Initialwert == 0\n(oder keiner)?", shape=diamond, style=filled, fillcolor="#f5f5f5"];
+
+    stack  [label="Stack\nlebt nur während des Aufrufs\nnonStatic", shape=box, style="rounded,filled", fillcolor="#e1bee7", color="#6a1b9a"];
+    folded [label="kein Speicher\nCompiler setzt den Wert direkt ein\nmoduleConstUnused", shape=box, style="rounded,filled,dashed", fillcolor="#fafafa", color="#9e9e9e"];
+    rodata [label=".rodata  (nm: R / r)\nrodata, big_data_blob,\nmoduleConst, bonus4::d", shape=box, style="rounded,filled", fillcolor="#bbdefb", color="#1565c0"];
+    bss    [label=".bss  (nm: B / b)\nfoo, foo2 = 0, bss,\nmoduleCounter, once", shape=box, style="rounded,filled", fillcolor="#c8e6c9", color="#2e7d32"];
+    data   [label=".data  (nm: D / d)\ndata, moduleValue,\nshadow, doSomethingStatic()::value", shape=box, style="rounded,filled", fillcolor="#ffe0b2", color="#e65100"];
+
+    start  -> q_dur;
+    q_dur  -> stack   [label=" ja"];
+    q_dur  -> q_const [label=" nein: global, Namespace\l oder static\l"];
+    q_const -> q_used [label=" ja"];
+    q_const -> q_zero [label=" nein"];
+    q_used -> rodata  [label=" ja"];
+    q_used -> folded  [label=" nein"];
+    q_zero -> bss     [label=" ja"];
+    q_zero -> data    [label=" nein"];
+
+    hint [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", fontsize=9,
+          label="Sonderfall: const, aber Initialwert braucht eine Relokation\l(z. B. Zeiger auf einen String in einem PIE-Binary)\l→ .data.rel.ro: beim Laden beschreibbar, danach read-only\l(RELRO). Beispiel: tea::PROJECT_NAME aus config.h\l"];
+    rodata -> hint [style=invis];
+}
