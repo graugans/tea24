@@ -38,6 +38,10 @@ git push origin main
 ## Übungsaufgaben
 
 - [Übungsaufgabe Nr. 000](exercise-000/README.md)
+- [Übungsaufgabe Nr. 001](exercise-001/README.md)
+- [Übungsaufgabe Nr. 002](exercise-002/README.md)
+- [Übungsaufgabe Nr. 003](exercise-003/README.md)
+- [Übungsaufgabe Nr. 004](exercise-004/README.md)
 
 ## Hilfreiche Links
 

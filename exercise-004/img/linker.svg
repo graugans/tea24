@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="330" viewBox="0 0 780 330" font-family="Helvetica,Arial,sans-serif" font-size="14">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e7b34"/>
+    </marker>
+  </defs>
+  <rect width="780" height="330" fill="white"/>
+
+  <!-- main.o -->
+  <rect x="60" y="30" width="210" height="100" rx="4" fill="#f4f6f8" stroke="#333"/>
+  <text x="165" y="52" text-anchor="middle" font-weight="bold">main.o</text>
+  <line x1="60" y1="62" x2="270" y2="62" stroke="#333"/>
+  <g font-family="DejaVu Sans Mono,Menlo,Consolas,monospace" font-size="13">
+    <text x="76" y="86"><tspan fill="#1e7b34" font-weight="bold">T</tspan>  main</text>
+    <text x="76" y="112"><tspan fill="#c0392b" font-weight="bold">U</tspan>  gruss</text>
+  </g>
+
+  <!-- greet.o -->
+  <rect x="60" y="180" width="210" height="126" rx="4" fill="#f4f6f8" stroke="#333"/>
+  <text x="165" y="202" text-anchor="middle" font-weight="bold">greet.o</text>
+  <line x1="60" y1="212" x2="270" y2="212" stroke="#333"/>
+  <g font-family="DejaVu Sans Mono,Menlo,Consolas,monospace" font-size="13">
+    <text x="76" y="236"><tspan fill="#1e7b34" font-weight="bold">T</tspan>  gruss</text>
+    <text x="76" y="262"><tspan fill="#c0392b" font-weight="bold">U</tspan>  putc</text>
+    <text x="76" y="288"><tspan fill="#c0392b" font-weight="bold">U</tspan>  stdout</text>
+  </g>
+
+  <!-- resolution arc gruss -->
+  <path d="M60,108 C12,130 12,210 60,232" fill="none" stroke="#1e7b34" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrg)"/>
+  <text x="76" y="160" fill="#1e7b34" font-size="12">U gruss ↔ T gruss: aufgelöst</text>
+
+  <!-- linker -->
+  <rect x="340" y="140" width="130" height="52" rx="10" fill="#fff6d6" stroke="#333"/>
+  <text x="405" y="162" text-anchor="middle" font-weight="bold">(4) Linker</text>
+  <text x="405" y="181" text-anchor="middle" font-size="12" fill="#555">ld / collect2</text>
+  <path d="M270,80 L338,152" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <path d="M270,250 L338,180" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <path d="M470,166 L538,166" stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+
+  <!-- output -->
+  <rect x="540" y="56" width="220" height="220" rx="4" fill="#eef5ff" stroke="#333"/>
+  <text x="650" y="78" text-anchor="middle" font-weight="bold">main <tspan font-weight="normal" fill="#555">(ausführbar)</tspan></text>
+  <line x1="540" y1="88" x2="760" y2="88" stroke="#333"/>
+  <g font-family="DejaVu Sans Mono,Menlo,Consolas,monospace" font-size="13">
+    <text x="556" y="112"><tspan fill="#1e7b34" font-weight="bold">T</tspan>  main</text>
+    <text x="556" y="136"><tspan fill="#1e7b34" font-weight="bold">T</tspan>  gruss</text>
+    <line x1="550" y1="152" x2="750" y2="152" stroke="#999" stroke-dasharray="3 3"/>
+    <text x="556" y="176"><tspan fill="#c0392b" font-weight="bold">U</tspan>  putc@GLIBC_2.2.5</text>
+    <text x="556" y="200"><tspan fill="#c0392b" font-weight="bold">U</tspan>  stdout@GLIBC_2.2.5</text>
+  </g>
+  <text x="556" y="230" font-size="12" fill="#555">noch offen: löst der Loader</text>
+  <text x="556" y="248" font-size="12" fill="#555">beim Start mit libc.so.6 auf</text>
+
+  <text x="405" y="230" text-anchor="middle" font-size="12" fill="#c0392b">fehlt greet.o:</text>
+  <text x="405" y="247" text-anchor="middle" font-size="12" fill="#c0392b" font-family="DejaVu Sans Mono,Menlo,Consolas,monospace">undefined reference</text>
+</svg>

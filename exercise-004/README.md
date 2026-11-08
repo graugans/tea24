@@ -54,6 +54,8 @@ Führe die Schritte einzeln aus und trage ein, was du siehst. Die Schritte 1 bis
 | | `./main` |  |
 | | `objdump -d main` |  |
 
+> **Tipp:** Die Zeilen der Form `# 6 "main.c" 3 4` in `main.i` sind Zeilenmarken für Fehlermeldungen. Mit `gcc -E -P main.c` werden sie weggelassen. `wc -l main.i` zeigt, wie viel `#include <stdio.h>` eigentlich einfügt.
+
 Fragen zu Teil A:
 
 1. Was ist aus `ZEICHEN` in `main.i` geworden? ______________________________________
@@ -82,8 +84,8 @@ void gruss(void);
 
 void gruss(void)
 {
-putc('A', stdout);
-putc('\n', stdout);
+    putc('A', stdout);
+    putc('\n', stdout);
 }
 ```
 
@@ -94,8 +96,8 @@ putc('\n', stdout);
 
 int main(void)
 {
-gruss();
-return 0;
+    gruss();
+    return 0;
 }
 ```
 
@@ -108,6 +110,10 @@ return 0;
 | 3. Fehler provozieren | `gcc main.o -o main` |  |
 | 4. Richtig linken | `gcc main.o greet.o -o main` |  |
 | | `./main` |  |
+
+![Der Linker verbindet offene (U) mit definierten (T) Symbolen](img/linker.svg)
+
+*Abbildung: `nm` zeigt mit `T` ein definiertes und mit `U` ein offenes (undefined) Symbol. Der Linker sucht für jedes `U` ein passendes `T`. Was er nicht findet, meldet er als* undefined reference*. Symbole aus der libc bleiben offen und werden erst beim Programmstart aufgelöst.*
 
 Fragen zu Teil B:
 
@@ -129,7 +135,11 @@ Benutze die Dateien aus Teil B.
 | | `file main_static` |  |
 | 3. Größe | `ls -l main main_static` |  |
 | 4. Symbol `putc` | `nm main \| grep putc` |  |
-| | `nm main_static \| grep putc` |  |
+| | `nm main_static \| grep -w putc` |  |
+
+![Dynamisch vs. statisch gelinkt](img/static-dynamic.svg)
+
+*Abbildung: Beim dynamischen Linken steht in `main` nur ein Verweis auf `putc`; der Code liegt in `libc.so.6` und wird beim Start vom Loader nachgeladen. Beim statischen Linken kopiert der Linker die benötigten Teile aus `libc.a` direkt in die Datei.*
 
 Fragen zu Teil C:
 
@@ -137,8 +147,101 @@ Fragen zu Teil C:
 2. Wo liegt der Code von `putc` bei `main`, wo bei `main_static`? ______________________
 3. Was passiert, wenn die libc auf dem Zielsystem fehlt? Welche der beiden Dateien läuft trotzdem? ______________________
 
+## Teil D (Bonus): Eine eigene statische Bibliothek von Hand
+
+Benutze wieder die Dateien aus Teil B. Eine statische Bibliothek (`.a`) ist nichts anderes als ein Archiv von Objektdateien. Gebaut wird sie mit `ar`, nicht mit dem Linker.
+
+![Statische Bibliothek mit ar bauen und Link-Reihenfolge](img/archive.svg)
+
+| Schritt | Befehl | Was ich sehe |
+|---|---|---|
+| 1. Archiv bauen | `ar rcs libgreet.a greet.o` |  |
+| | `ar t libgreet.a` |  |
+| | `nm -A libgreet.a` |  |
+| 2. Richtig linken | `gcc main.o -L. -lgreet -o main_lib` |  |
+| | `./main_lib` |  |
+| 3. Falsche Reihenfolge | `gcc -L. -lgreet main.o -o main_lib` |  |
+| 4. Shared Library bauen | `gcc -fPIC -c greet.c -o greet_pic.o` |  |
+| | `gcc -shared greet_pic.o -o libgreet.so` |  |
+| 5. Nochmal linken | `gcc main.o -L. -lgreet -o main_so` |  |
+| | `ldd main_so` |  |
+| | `./main_so` |  |
+| | `LD_LIBRARY_PATH=. ./main_so` |  |
+
+Fragen zu Teil D:
+
+1. Was bedeuten `-L.` und `-lgreet`? Welchen Dateinamen sucht der Linker bei `-lgreet`? ______________________
+2. Warum schlägt Schritt 3 fehl, obwohl dieselben Dateien beteiligt sind? ______________________
+3. In Schritt 5 liegen `libgreet.a` **und** `libgreet.so` im Ordner. Welche nimmt der Linker? Woran erkennst du das? ______________________
+4. Warum findet `./main_so` die Bibliothek nicht, obwohl sie im selben Ordner liegt? ______________________
+
+> **Tipp:** Mit `gcc ... -Wl,-rpath,'$ORIGIN'` wird ein Suchpfad in die Datei eingetragen. Prüfe das mit `readelf -d main_so | grep -E 'NEEDED|RUNPATH'`.
+
+## Teil E (Bonus): Übungsaufgabe 3 komplett statisch
+
+Voraussetzung: Übungsaufgabe 3 ist gelöst und `build/bin/exercise-003` lässt sich bauen.
+
+### E.1 Wer ist hier eigentlich statisch?
+
+| Schritt | Befehl | Was ich sehe |
+|---|---|---|
+| 1. Bibliothek | `ls -l build/lib` |  |
+| | `ar t build/lib/libversion.a` |  |
+| 2. Abhängigkeiten | `ldd build/bin/exercise-003` |  |
+| 3. Symbole | `nm -C build/bin/exercise-003 \| grep -i version` |  |
+| | `nm -C build/bin/exercise-003 \| grep 'fmt::' \| head` |  |
+
+Fragen:
+
+1. Taucht `libversion` in der Ausgabe von `ldd` auf? Warum (nicht)? ______________________
+2. Welche Bibliotheken werden **noch** zur Laufzeit gebraucht? ______________________
+
+### E.2 `{fmt}` statisch einbinden
+
+Im Container ist `{fmt}` nur als Shared Library (`libfmt.so`) installiert, eine `libfmt.a` gibt es nicht. `{fmt}` bietet aber zusätzlich das CMake-Target `fmt::fmt-header-only` an: Dann wird der komplette `{fmt}`-Code beim Übersetzen in das eigene Programm eingebaut.
+
+Lege in `exercise-003/CMakeLists.txt` ein zweites Executable an:
+
+```cmake
+add_executable(exercise-003-static main.cpp)
+target_link_libraries(exercise-003-static PRIVATE version fmt::fmt-header-only)
+```
+
+> **Achtung:** Falls deine Bibliothek `version` selbst gegen `fmt::fmt` linkt (`PUBLIC`), musst du sie ebenfalls umstellen. `fmt::fmt` und `fmt::fmt-header-only` dürfen nicht im selben Programm gemischt werden.
+
+| Schritt | Befehl | Was ich sehe |
+|---|---|---|
+| 1. Bauen | `cmake --build build` |  |
+| 2. Vergleichen | `ldd build/bin/exercise-003-static` |  |
+| | `ls -l build/bin/exercise-003 build/bin/exercise-003-static` |  |
+
+### E.3 Alles statisch
+
+Jetzt sollen auch `libstdc++` und `libc` hinein. Ergänze:
+
+```cmake
+add_executable(exercise-003-full-static main.cpp)
+target_link_libraries(exercise-003-full-static PRIVATE version fmt::fmt-header-only)
+target_link_options(exercise-003-full-static PRIVATE -static)
+```
+
+| Schritt | Befehl | Was ich sehe |
+|---|---|---|
+| 1. Bauen und starten | `./build/bin/exercise-003-full-static` |  |
+| 2. Prüfen | `ldd build/bin/exercise-003-full-static` |  |
+| | `file build/bin/exercise-003-full-static` |  |
+| 3. Größen | `ls -lh build/bin/exercise-003*` |  |
+
+Fragen zu Teil E:
+
+1. Erstelle eine Tabelle: Programm, Größe, Bibliotheken laut `ldd`. ______________________
+2. Was müsste passieren, damit eine Sicherheitslücke in `{fmt}` bzw. in der libc behoben wird, bei der dynamischen und bei der statischen Variante? ______________________
+3. Warum ist auf einem Mikrocontroller (z. B. Raspberry Pi Pico) statisches Linken der Normalfall? ______________________
+
 ## Hinweise
 
 - Für `-static` braucht man die statische libc (`libc.a`). Unter Debian und Ubuntu ist sie in `libc6-dev` enthalten, unter Fedora kommt sie mit `glibc-static`.
 - Neuere `gcc`-Versionen bauen standardmäßig PIE-Binaries. Wenn die `objdump`-Ausgabe verwirrt, ergänze `-no-pie` beim Übersetzen und Linken.
 - Mit `gcc -v` siehst du, welche Einzelprogramme `gcc` im Hintergrund aufruft.
+- `file` ist im Container nicht vorinstalliert: `sudo apt-get update && sudo apt-get install -y file`
+- `nm -C` übersetzt C++-Symbolnamen in lesbare Form (*demangling*). Alternativ: `nm main.o | c++filt`.
