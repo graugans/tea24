@@ -1,0 +1,31 @@
+// Bonus 1: isAtLeast() als lexikografischer Vergleich
+digraph is_at_least {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.4,
+           label=<<b>isAtLeast(major, minor, patch)</b> – Bibliothek ist 0.1.2>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10];
+    edge [fontname="Helvetica", fontsize=9];
+
+    q1 [shape=diamond, style=filled, fillcolor="#f5f5f5", label="MAJOR (0)\nvs. major"];
+    q2 [shape=diamond, style=filled, fillcolor="#f5f5f5", label="MINOR (1)\nvs. minor"];
+    q3 [shape=diamond, style=filled, fillcolor="#f5f5f5", label="PATCH (2)\nvs. patch"];
+    t  [shape=box, style="rounded,filled", fillcolor="#c8e6c9", color="#2e7d32", label="true"];
+    f  [shape=box, style="rounded,filled", fillcolor="#ffcdd2", color="#c62828", label="false"];
+
+    q1 -> t  [label=" >"]; q1 -> f [label=" <"]; q1 -> q2 [label=" ="];
+    q2 -> t  [label=" >"]; q2 -> f [label=" <"]; q2 -> q3 [label=" ="];
+    q3 -> t  [label=" ≥"]; q3 -> f [label=" <"];
+
+    code [shape=note, style=filled, fillcolor="#fff9c4", color="#827717", fontname="Courier", label="return std::tie(MAJOR, MINOR, PATCH)\l    >= std::tie(major, minor, patch);\l"];
+    ex [shape=plaintext, label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="3">
+        <tr><td bgcolor="#eeeeee"><b>Aufruf</b></td><td bgcolor="#eeeeee"><b>Ergebnis</b></td><td bgcolor="#eeeeee"><b>entschieden bei</b></td></tr>
+        <tr><td>(0, 0, 0)</td><td bgcolor="#c8e6c9">true</td><td>minor 1 &gt; 0</td></tr>
+        <tr><td>(0, 1, 2)</td><td bgcolor="#c8e6c9">true</td><td>patch 2 ≥ 2</td></tr>
+        <tr><td>(0, 1, 3)</td><td bgcolor="#ffcdd2">false</td><td>patch 2 &lt; 3</td></tr>
+        <tr><td>(0, 2, 0)</td><td bgcolor="#ffcdd2">false</td><td>minor 1 &lt; 2 (patch egal!)</td></tr>
+        <tr><td>(1, 0, 0)</td><td bgcolor="#ffcdd2">false</td><td>major 0 &lt; 1</td></tr>
+      </table>>];
+    t -> code [style=invis]; f -> ex [style=invis];
+}

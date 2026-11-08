@@ -1,5 +1,9 @@
-#ifndef CONFIG_H_IN
-#define CONFIG_H_IN
+/*
+ * Konfig-Header des PROGRAMMS exercise-003 (nicht der Bibliothek!).
+ * Erzeugt von configure_file() nach build/exercise-003/include/config.h
+ */
+#ifndef TEA24_EXERCISE_003_CONFIG_H
+#define TEA24_EXERCISE_003_CONFIG_H
 
 namespace tea
 {
@@ -8,6 +12,8 @@ constexpr auto PROJECT_VER{"@PROJECT_VERSION@"};
 constexpr auto PROJECT_VER_MAJOR{"@PROJECT_VERSION_MAJOR@"};
 constexpr auto PROJECT_VER_MINOR{"@PROJECT_VERSION_MINOR@"};
 constexpr auto PROJECT_VER_PATCH{"@PROJECT_VERSION_PATCH@"};
-constexpr auto PROJECT_BUILD_DATE{"@BUILD_DATE@"};
+constexpr auto PROJECT_BUILD_DATE{"@BUILD_DATE@"};  // Zeitpunkt des CMake-Configure-Laufs!
+constexpr auto TOP_LEVEL_PROJECT{"@CMAKE_PROJECT_NAME@"};  // project() im Root-CMakeLists.txt
 }  // namespace tea
-#endif  // CONFIG_H_IN
+
+#endif /* TEA24_EXERCISE_003_CONFIG_H */

@@ -1,0 +1,26 @@
+// Bonus 5: In welcher Phase meldet sich welcher Fehler?
+digraph errors {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.7,
+           label=<<b>Fehlerlandkarte</b> – je früher ein Fehler auffällt, desto besser (alle Meldungen reproduziert)>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9, color="#9e9e9e"];
+
+    p1 [fillcolor="#e65100", fontcolor="white", label="CMake\nConfigure/Generate"];
+    p2 [fillcolor="#6a1b9a", fontcolor="white", label="Präprozessor"];
+    p3 [fillcolor="#1565c0", fontcolor="white", label="Compiler"];
+    p4 [fillcolor="#c62828", fontcolor="white", label="Linker"];
+    p1 -> p2 -> p3 -> p4 [color="#424242", penwidth=2];
+
+    e5b [fillcolor="#fff3e0", label="5b: Tippfehler tea24::versoin\n„Target links to tea24::versoin\nbut the target was not found“"];
+    e1  [fillcolor="#f3e5f5", label="1: #include vergessen\n„use of undeclared identifier 'version'“"];
+    e2a [fillcolor="#f3e5f5", label="2a: target_link_libraries vergessen\n„'version/version.h' file not found“\n(Include-Pfad kommt erst MIT dem Link!)"];
+    e3  [fillcolor="#f3e5f5", label="3: Include-Pfad PRIVATE statt PUBLIC\nBibliothek baut ✓, Nutzer:\n„'version/version.h' file not found“"];
+    e4  [fillcolor="#f3e5f5", label="4: Build-Ordner nicht im Include-Pfad\n„'version_config.h' file not found“"];
+    e2b [fillcolor="#ffebee", label="2b: Link vergessen, Header von Hand\n„undefined reference to\n`tea::version::projectName()'“"];
+    e5a [fillcolor="#ffebee", label="5a: Tippfehler version_libary (ohne ::)\nzuerst Header fehlt, dann:\n„cannot find -lversion_libary“"];
+    e6  [fillcolor="#ffebee", label="Stolperfalle: <sys/sysmacros.h>\n„undefined reference to\n`tea::version::gnu_dev_major()'“"];
+
+    p1 -> e5b; p2 -> e2a; p2 -> e3; p2 -> e4; p3 -> e1; p4 -> e2b; p4 -> e5a; p4 -> e6;
+}

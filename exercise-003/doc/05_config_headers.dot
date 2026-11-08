@@ -1,0 +1,36 @@
+// Drei project()-Aufrufe, zwei Konfig-Header – und die Guard-Kollision
+digraph config {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.6,
+           label=<<b>Wessen Version?</b> Jeder project()-Aufruf setzt eigene PROJECT_*-Variablen>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    root [fillcolor="#eeeeee", color="#616161", label="Root CMakeLists.txt\nproject(tea24)\nCMAKE_PROJECT_NAME = tea24\n(keine VERSION)"];
+    libp [fillcolor="#bbdefb", color="#1565c0", label="libs/version/CMakeLists.txt\nproject(version_library VERSION 0.1.2)\nPROJECT_NAME = version_library"];
+    exep [fillcolor="#c8e6c9", color="#2e7d32", label="exercise-003/CMakeLists.txt\nproject(exercise-003 VERSION 0.0.1)\nPROJECT_NAME = exercise-003"];
+
+    vh [shape=note, fillcolor="#e3f2fd", color="#1565c0", fontname="Courier", label="version_config.h  (PRIVATE)\lnamespace tea::version::config {\l  NAME    = \"version_library\"\l  MAJOR   = 0   // int\l  ...\l}\l"];
+    ch [shape=note, fillcolor="#e8f5e9", color="#2e7d32", fontname="Courier", label="config.h  (nur exercise-003)\lnamespace tea {\l  PROJECT_NAME = \"exercise-003\"\l  PROJECT_VER_MAJOR = \"0\" // String!\l  TOP_LEVEL_PROJECT = \"tea24\"\l}\l"];
+
+    root -> libp [label="add_subdirectory(libs)"];
+    root -> exep [label="add_subdirectory(exercise-003)"];
+    libp -> vh [label="configure_file()"];
+    exep -> ch [label="configure_file()"];
+    root -> ch [style=dashed, label="@CMAKE_PROJECT_NAME@"];
+
+    api [fillcolor="#fff9c4", color="#827717", label="tea::version::fullVersion()\n→ \"version_library-0.1.2\""];
+    vh -> api;
+
+    old [shape=note, fillcolor="#ffebee", color="#c62828", fontsize=10, label=<
+      <b>Vorher: beide Header mit Guard CONFIG_H_IN und namespace tea</b><br align="left"/><br align="left"/>
+      #include "config.h" + #include "version_config.h"<br align="left"/>
+      → zweiter Header wird still übersprungen:<br align="left"/>
+      <font face="Courier">error: cannot initialize return object of type 'int'</font><br align="left"/>
+      <font face="Courier">       with an lvalue of type 'const char *const'</font><br align="left"/><br align="left"/>
+      Andere Reihenfolge: <b>kein Fehler</b>, aber tea::PROJECT_NAME<br align="left"/>
+      ist plötzlich "version_library" statt "exercise-003"!<br align="left"/>>];
+    ch -> old [style=dashed, color="#c62828", arrowhead=none];
+    vh -> old [style=dashed, color="#c62828", arrowhead=none];
+}

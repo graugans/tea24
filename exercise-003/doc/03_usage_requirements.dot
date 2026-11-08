@@ -1,0 +1,45 @@
+// PUBLIC / PRIVATE: welche Eigenschaften wandern zu wem?
+digraph usage {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=1.2,
+           label=<<b>PUBLIC vs. PRIVATE</b> – target_link_libraries() übernimmt die „Usage Requirements“ der Bibliothek>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9];
+
+    lib [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2" bgcolor="#1565c0"><font color="white"><b>version_library</b>  (STATIC, Alias tea24::version)</font></td></tr>
+        <tr><td bgcolor="#c8e6c9"><b>PUBLIC</b></td><td align="left" port="pub" bgcolor="#e8f5e9">include dir: libs/version/include<br align="left"/>→ version.h, version_c_api.h</td></tr>
+        <tr><td bgcolor="#ffcdd2"><b>PRIVATE</b></td><td align="left" port="priv" bgcolor="#ffebee">include dir: build/libs/version/include<br align="left"/>→ version_config.h</td></tr>
+        <tr><td bgcolor="#ffcdd2"><b>PRIVATE</b></td><td align="left" port="fmt" bgcolor="#ffebee">link: fmt::fmt</td></tr>
+      </table>>];
+
+    exe [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>exercise-003</b></font></td></tr>
+        <tr><td align="left" port="inc" bgcolor="#e8f5e9">✓ -I libs/version/include<br align="left"/>   #include "version/version.h" klappt</td></tr>
+        <tr><td align="left" port="noinc" bgcolor="#fafafa"><font color="#9e9e9e">✗ version_config.h unsichtbar (gewollt)</font></td></tr>
+        <tr><td align="left" port="link" bgcolor="#e3f2fd">✓ linkt libversion_library.a<br align="left"/>✓ linkt libfmt.so (LINK_ONLY)</td></tr>
+      </table>>];
+
+    fmt [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#757575"><font color="white"><b>fmt::fmt</b> (shared, System)</font></td></tr>
+        <tr><td align="left">PUBLIC: -I /usr/include (fmt)</td></tr>
+      </table>>];
+
+    lib:pub  -> exe:inc   [color="#2e7d32", penwidth=2, label="PUBLIC: wird\nweitergereicht"];
+    lib:priv -> exe:noinc [color="#c62828", style=dashed, arrowhead=tee, label="PRIVATE: bleibt\nin der Bibliothek"];
+    lib:fmt  -> fmt       [color="#616161"];
+    lib:fmt  -> exe:link  [color="#1565c0", style=dotted, label="Sonderfall STATIC:\n.a enthält offene U fmt::…\n→ $<LINK_ONLY:fmt::fmt>"];
+
+    rule [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+      <b>Faustregel</b><br align="left"/>
+      <b>PUBLIC</b>     – braucht die Bibliothek UND wer ihren Header einbindet<br align="left"/>
+      <b>PRIVATE</b>    – braucht nur die Implementierung (.cpp)<br align="left"/>
+      <b>INTERFACE</b>  – braucht nur der Nutzer (z. B. header-only)<br align="left"/>
+      <br align="left"/>
+      Frage: Taucht es in einem <i>öffentlichen Header</i> auf? → PUBLIC<br align="left"/>>];
+    exe -> rule [style=invis];
+}

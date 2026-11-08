@@ -40,7 +40,7 @@ git push origin main
 - [Übungsaufgabe Nr. 000](exercise-000/README.md)
 - [Übungsaufgabe Nr. 001](exercise-001/README.md)
 - [Übungsaufgabe Nr. 002](exercise-002/README.md): `static`, Sichtbarkeit und Speichersegmente
-- [Übungsaufgabe Nr. 003](exercise-003/README.md)
+- [Übungsaufgabe Nr. 003](exercise-003/README.md): Statische Bibliothek, `configure_file`, C-API ([Lösung](exercise-003/SOLUTION.md))
 
 ## Hintergrundwissen
 

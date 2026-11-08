@@ -63,14 +63,15 @@ include(cmake/Doxygen.cmake)
 include(cmake/Diagrams.cmake)
 add_graphviz_diagrams(doc-diagrams "${CMAKE_CURRENT_SOURCE_DIR}/doc")
 
+# libs (before the exercises that use them - not strictly required by CMake, but easier to read)
+add_subdirectory(libs)
+
 # Exercises & solutions
 add_subdirectory(exercise-000)
 add_subdirectory(exercise-001)
 add_subdirectory(exercise-002)
 add_subdirectory(exercise-003)
 
-# libs
-add_subdirectory(libs)
 # templates
 #add_subdirectory(templates)
 

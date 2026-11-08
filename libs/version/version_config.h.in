@@ -1,13 +1,25 @@
-#ifndef CONFIG_H_IN
-#define CONFIG_H_IN
+/*
+ * Vorlage für den generierten Konfig-Header der Versionsbibliothek.
+ *
+ * CMake ersetzt beim CONFIGURE-Schritt alle @VARIABLE@-Platzhalter (configure_file mit @ONLY)
+ * und schreibt das Ergebnis nach build/libs/version/include/version_config.h.
+ * -> Diese Datei NIE von Hand im Build-Ordner ändern, sie wird überschrieben.
+ *
+ * Guard und Namespace sind bewusst eindeutig gewählt: Vorher hießen sie wie in
+ * exercise-003/config.h.in (CONFIG_H_IN bzw. namespace tea) – wer beide Header in einer
+ * Übersetzungseinheit einbindet, bekam still den falschen Inhalt (siehe SOLUTION.md).
+ */
+#ifndef TEA24_VERSION_CONFIG_H
+#define TEA24_VERSION_CONFIG_H
 
-namespace tea
+namespace tea::version::config
 {
-constexpr auto PROJECT_NAME{"@PROJECT_NAME@"};
-constexpr auto PROJECT_VER{"@PROJECT_VERSION@"};
-constexpr unsigned int PROJECT_VER_MAJOR{@PROJECT_VERSION_MAJOR@};
-constexpr unsigned int PROJECT_VER_MINOR{@PROJECT_VERSION_MINOR@};
-constexpr unsigned int PROJECT_VER_PATCH{@PROJECT_VERSION_PATCH@};
-constexpr auto PROJECT_BUILD_DATE{"@BUILD_DATE@"};
-}  // namespace tea
-#endif  // CONFIG_H_IN
+constexpr auto NAME{"@PROJECT_NAME@"};
+constexpr auto VERSION{"@PROJECT_VERSION@"};
+constexpr int MAJOR{@PROJECT_VERSION_MAJOR@};
+constexpr int MINOR{@PROJECT_VERSION_MINOR@};
+constexpr int PATCH{@PROJECT_VERSION_PATCH@};
+constexpr auto CONFIGURE_DATE{"@BUILD_DATE@"};
+}  // namespace tea::version::config
+
+#endif /* TEA24_VERSION_CONFIG_H */

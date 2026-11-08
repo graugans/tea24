@@ -1,0 +1,47 @@
+// Eine statische Bibliothek ist ein Archiv von .o-Dateien – der Linker nimmt nur, was gebraucht wird
+digraph archive {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=1.3,
+           label=<<b>libversion_library.a ist nur ein Archiv</b> (<font face="Courier">ar t</font>) – der Linker kopiert ganze .o-Dateien, aber nur die benötigten>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9];
+
+    archive [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#1565c0" colspan="2"><font color="white"><b>libversion_library.a</b></font></td></tr>
+        <tr><td bgcolor="#bbdefb" colspan="2" port="v"><b>version.cpp.o</b></td></tr>
+        <tr><td bgcolor="#e3f2fd">T</td><td align="left" bgcolor="#e3f2fd">tea::version::fullVersion()</td></tr>
+        <tr><td bgcolor="#e3f2fd">T</td><td align="left" bgcolor="#e3f2fd">tea::version::major() … isAtLeast()</td></tr>
+        <tr><td bgcolor="#eeeeee">U</td><td align="left" bgcolor="#eeeeee">fmt::v12::vformat(…)</td></tr>
+        <tr><td bgcolor="#ffe0b2" colspan="2" port="c"><b>version_c_api.cpp.o</b></td></tr>
+        <tr><td bgcolor="#fff3e0">T</td><td align="left" bgcolor="#fff3e0">version_full_c … version_is_at_least_c</td></tr>
+        <tr><td bgcolor="#fff3e0">b</td><td align="left" bgcolor="#fff3e0">version_full_c()::full + Guard</td></tr>
+        <tr><td bgcolor="#eeeeee">U</td><td align="left" bgcolor="#eeeeee">tea::version::fullVersion() …</td></tr>
+      </table>>];
+
+    exe [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>exercise-003</b>  (165 KB)</font></td></tr>
+        <tr><td bgcolor="#e3f2fd" port="v">version.cpp.o  ✓ 7 Funktionen</td></tr>
+        <tr><td bgcolor="#fff3e0" port="c">version_c_api.cpp.o  ✓ 6 Funktionen</td></tr>
+      </table>>];
+    cli [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>exercise-003-cli</b></font></td></tr>
+        <tr><td bgcolor="#e3f2fd" port="v">version.cpp.o  ✓ 7 Funktionen</td></tr>
+        <tr><td bgcolor="#fafafa"><font color="#9e9e9e">version_c_api.cpp.o  ✗ nicht gebraucht<br/>→ nicht im Programm (0 Symbole)</font></td></tr>
+      </table>>];
+    capp [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>exercise-003-c</b>  (C-Programm)</font></td></tr>
+        <tr><td bgcolor="#fff3e0" port="c">version_c_api.cpp.o  ✓ direkt benutzt</td></tr>
+        <tr><td bgcolor="#e3f2fd" port="v">version.cpp.o  ✓ indirekt (U im Wrapper)</td></tr>
+      </table>>];
+
+    archive:v -> exe:v [color="#1565c0"];
+    archive:c -> exe:c [color="#e65100"];
+    archive:v -> cli:v [color="#1565c0"];
+    archive:c -> capp:c [color="#e65100", label="1. Runde"];
+    archive:v -> capp:v [color="#1565c0", style=dashed, label="2. Runde: offene U\naus dem Wrapper"];
+}

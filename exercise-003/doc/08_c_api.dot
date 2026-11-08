@@ -1,0 +1,40 @@
+// Bonus 3: Eine C++-Bibliothek mit C-Schnittstelle
+digraph c_api {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.9,
+           label=<<b>C-API über der C++-API</b> – extern "C" als Brücke zwischen zwei Welten>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    subgraph cluster_c {
+        label="C-Welt (clang, C-Compiler)"; style="rounded,filled"; fillcolor="#fffde7"; color="#f9a825";
+        cmain [shape=note, fillcolor="white", fontname="Courier", label="// c_consumer.c\l#include \"version/version_c_api.h\"\lprintf(\"%s\", version_full_c());\l"];
+        cobj  [fillcolor="white", fontname="Courier", label="c_consumer.c.o\nU version_full_c\nU version_major_c …"];
+        cmain -> cobj;
+    }
+
+    subgraph cluster_lib {
+        label="libversion_library.a (clang++, C++-Compiler)"; style="rounded,filled"; fillcolor="#e3f2fd"; color="#1565c0";
+        wrap [fillcolor="#ffe0b2", color="#e65100", fontname="Courier",
+              label="version_c_api.cpp.o\lT version_full_c          ← extern \"C\": kein Mangling\lb _ZZ14version_full_cE4full…    static std::string\lb _ZGVZ14version_full_cE4full…  Guard (thread-safe init)\l"];
+        cpp  [fillcolor="#bbdefb", color="#1565c0", fontname="Courier",
+              label="version.cpp.o\lT _ZN3tea7version11fullVersionB5cxx11Ev\l  = tea::version::fullVersion[abi:cxx11]()\l"];
+        wrap -> cpp [label="ruft C++-API\n(gemangelt)"];
+    }
+
+    deps [fillcolor="#eeeeee", color="#757575", label="libstdc++.so  (std::string, __cxa_guard_*)\nlibfmt.so     (fmt::vformat)"];
+
+    cobj -> wrap [color="#2e7d32", penwidth=2, label="gleiche Zeichenkette\n→ Link OK"];
+    cpp -> deps;
+
+    linker [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+      <b>Wer linkt ein C-Programm gegen eine C++-Bibliothek?</b><br align="left"/>
+      CMake erkennt: version_library enthält C++ → nimmt den<br align="left"/>
+      <b>C++-Linker</b> (CXX_EXECUTABLE_LINKER) und ergänzt libfmt.<br align="left"/>
+      <br align="left"/>
+      Von Hand mit <font face="Courier">cc c_consumer.o libversion_library.a</font>:<br align="left"/>
+      <font face="Courier">undefined reference to `__cxa_guard_acquire'</font><br align="left"/>
+      <font face="Courier">undefined reference to `__cxa_begin_catch'</font> …<br align="left"/>>];
+    deps -> linker [style=invis];
+}

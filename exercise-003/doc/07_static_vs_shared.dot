@@ -1,0 +1,36 @@
+// Bonus 4: derselbe main.cpp – einmal statisch, einmal dynamisch gelinkt
+digraph static_vs_shared {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.5, compound=true,
+           label=<<b>Statisch vs. dynamisch</b> – gemessen mit dladdr(), readelf -d und ldd>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    subgraph cluster_static {
+        label=<<b>exercise-003</b> (gegen libversion_library.a)>; style="rounded,filled"; fillcolor="#e3f2fd"; color="#1565c0"; fontsize=12;
+        s_build [fillcolor="white", label="Linkzeit: Code aus dem Archiv wird\nin das Programm KOPIERT"];
+        s_exe   [fillcolor="#bbdefb", label="bin/exercise-003   165 KB\n──────────────\nmain()\ntea::version::fullVersion()   ← dladdr: \"exercise-003\"\nversion_full_c()"];
+        s_need  [fillcolor="white", fontname="Courier", fontsize=9, label="NEEDED: libfmt.so.12, libstdc++.so.6, libc.so.6\n(kein libversion_library!)"];
+        s_build -> s_exe -> s_need;
+    }
+
+    subgraph cluster_shared {
+        label=<<b>exercise-003-shared</b> (gegen libversion_library.so)>; style="rounded,filled"; fillcolor="#f3e5f5"; color="#6a1b9a"; fontsize=12;
+        d_build [fillcolor="white", label="Linkzeit: nur VERMERK \"brauche libversion_library.so.0\"\n+ RUNPATH /workspaces/tea24/build/lib"];
+        d_exe   [fillcolor="#e1bee7", label="bin/exercise-003-shared   117 KB\n──────────────\nmain()\nU tea::version::fullVersion()\nU version_full_c"];
+        d_ld    [fillcolor="#fff9c4", color="#827717", label="Programmstart: ld.so\nsucht NEEDED-Bibliotheken\n(RUNPATH, LD_LIBRARY_PATH, /etc/ld.so.cache)"];
+        d_so    [fillcolor="#e1bee7", label="libversion_library.so.0.1.2   93 KB\n──────────────\ntea::version::fullVersion()   ← dladdr: \"libversion_library.so.0\"\nversion_full_c()"];
+        d_build -> d_exe -> d_ld -> d_so;
+        d_exe -> d_so [style=dashed, label="Aufruf zur Laufzeit\nüber PLT/GOT"];
+    }
+
+    links [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td colspan="2" bgcolor="#6a1b9a"><font color="white"><b>Die drei Namen einer Shared Library</b></font></td></tr>
+        <tr><td><font face="Courier">libversion_library.so</font></td><td align="left">Link-Name: für <font face="Courier">-lversion_library</font> beim Bauen</td></tr>
+        <tr><td><font face="Courier">libversion_library.so.0</font></td><td align="left">SONAME (SOVERSION = Major): steht in NEEDED</td></tr>
+        <tr><td><font face="Courier">libversion_library.so.0.1.2</font></td><td align="left">echte Datei (VERSION)</td></tr>
+      </table>>];
+    d_so -> links [style=invis];
+}

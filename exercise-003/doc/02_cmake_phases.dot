@@ -1,0 +1,38 @@
+// Die vier Phasen: Configure, Generate, Build, Run – und wann was passiert
+digraph phases {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.5,
+           label=<<b>Wann passiert was?</b> configure_file() und string(TIMESTAMP) laufen beim Configure – nicht bei jedem Build>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9, penwidth=2, color="#424242"];
+
+    configure [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#e65100"><font color="white"><b>① Configure</b></font></td></tr>
+        <tr><td align="left" bgcolor="#fff3e0"><font face="Courier">cmake -S . -B build</font></td></tr>
+        <tr><td align="left">CMakeLists.txt ausführen<br align="left"/>project(… VERSION 0.1.2)<br align="left"/>  → PROJECT_VERSION_MAJOR = 0 …<br align="left"/>find_package(fmt)<br align="left"/>string(TIMESTAMP BUILD_DATE)<br align="left"/><b>configure_file()</b> → *.h<br align="left"/></td></tr>
+      </table>>];
+    generate [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#6a1b9a"><font color="white"><b>② Generate</b></font></td></tr>
+        <tr><td align="left" bgcolor="#f3e5f5"><font face="Courier">(automatisch)</font></td></tr>
+        <tr><td align="left">Targets &amp; Abhängigkeiten<br align="left"/>auflösen (PUBLIC/PRIVATE)<br align="left"/>→ build.ninja / Makefile<br align="left"/>→ compile_commands.json<br align="left"/>Tippfehler in Targets mit ::<br align="left"/>→ Fehler <b>hier</b><br align="left"/></td></tr>
+      </table>>];
+    build [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#1565c0"><font color="white"><b>③ Build</b></font></td></tr>
+        <tr><td align="left" bgcolor="#e3f2fd"><font face="Courier">cmake --build build</font></td></tr>
+        <tr><td align="left">Präprozessor (#include)<br align="left"/>Compiler → *.o<br align="left"/>ar → libversion_library.a<br align="left"/>Linker → bin/exercise-003<br align="left"/>Nur Geändertes wird neu gebaut<br align="left"/></td></tr>
+      </table>>];
+    run [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>④ Run</b></font></td></tr>
+        <tr><td align="left" bgcolor="#e8f5e9"><font face="Courier">./build/bin/exercise-003</font></td></tr>
+        <tr><td align="left">ld.so lädt .so-Dateien<br align="left"/>(nur bei shared)<br align="left"/>Ausgabe: version_library-0.1.2<br align="left"/>"configure_file() am …"<br align="left"/>= Datum aus Phase ①!<br align="left"/></td></tr>
+      </table>>];
+
+    configure -> generate -> build -> run;
+    build -> configure [style=dashed, penwidth=1, constraint=false, color="#e65100", fontcolor="#e65100",
+                        label="nur wenn sich ein CMakeLists.txt\noder *.h.in geändert hat"];
+}

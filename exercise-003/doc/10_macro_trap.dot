@@ -1,0 +1,27 @@
+// Stolperfalle: glibc-Makros major()/minor() vs. unsere API
+digraph macro {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.8,
+           label=<<b>Makros kennen keine Namespaces</b> – wie aus tea::version::major() still gnu_dev_major() wird>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fontname="Courier"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    sys [shape=note, fillcolor="#eeeeee", color="#757575", label="/usr/include/.../sys/sysmacros.h\l#define major(dev) gnu_dev_major (dev)\l#define minor(dev) gnu_dev_minor (dev)\l"];
+    src [shape=note, fillcolor="#fff9c4", color="#827717", label="#include <sys/sysmacros.h>\l#include \"version/version.h\"\l...\lversion::major()\l"];
+    pp  [fillcolor="#f3e5f5", color="#6a1b9a", label="nach dem Präprozessor:\lint gnu_dev_major ();     // Deklaration!\l...\lversion::gnu_dev_major ()\l"];
+    cc  [fillcolor="#e8f5e9", color="#2e7d32", fontname="Helvetica", label="Compiler: ✓ keine Warnung\n(passt ja zur „Deklaration“)"];
+    ld  [fillcolor="#ffcdd2", color="#c62828", fontname="Helvetica", label="Linker:\nundefined reference to\n`tea::version::gnu_dev_major()'"];
+    sys -> pp [style=dashed, label="Makro"];
+    src -> pp [label="  -E  "];
+    pp -> cc -> ld;
+
+    fix [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontname="Helvetica", label=<
+      <b>Abhilfen</b><br align="left"/>
+      • Namen meiden, die als Makro existieren (major, minor, min, max, errno …)<br align="left"/>
+        z. B. versionMajor()<br align="left"/>
+      • Klammern unterdrücken Funktionsmakros – in Deklaration UND Aufruf:<br align="left"/>  <font face="Courier">int (major)();   (version::major)()</font><br align="left"/>
+      • <font face="Courier">#undef major</font> nach System-Headern (unschön)<br align="left"/>
+      • Makros in eigenem Code IMMER_GROSS schreiben<br align="left"/>>];
+    ld -> fix [style=invis];
+}

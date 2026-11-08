@@ -1,0 +1,47 @@
+// Übung 003: Quellbaum vs. Build-Baum – was schreibe ich, was erzeugt CMake?
+digraph layout {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.25, ranksep=1.1,
+           label=<<b>Quellbaum vs. Build-Baum</b> – links steht, was Sie schreiben, rechts, was CMake und der Compiler daraus erzeugen>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9, color="#616161"];
+
+    src [label=<
+      <table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#fffde7" style="rounded">
+        <tr><td align="left" bgcolor="#f9a825"><font color="white"><b>Quellbaum (git)</b>  /workspaces/tea24</font></td></tr>
+        <tr><td align="left">📄 CMakeLists.txt  <font color="#757575">add_subdirectory(libs) …</font></td></tr>
+        <tr><td align="left">📁 libs/version/</td></tr>
+        <tr><td align="left">    📄 CMakeLists.txt  <font color="#757575">project(version_library VERSION 0.1.2)</font></td></tr>
+        <tr><td align="left" port="vin" bgcolor="#ffe0b2">    📄 version_config.h.in  <font color="#e65100">Vorlage</font></td></tr>
+        <tr><td align="left" port="api" bgcolor="#c8e6c9">    📁 include/version/  <font color="#2e7d32">PUBLIC – die API</font></td></tr>
+        <tr><td align="left" bgcolor="#c8e6c9">        version.h, version_c_api.h</td></tr>
+        <tr><td align="left" port="srcs">    📁 src/  version.cpp, version_c_api.cpp</td></tr>
+        <tr><td align="left">    📁 test/  version_test.cpp</td></tr>
+        <tr><td align="left">📁 exercise-003/</td></tr>
+        <tr><td align="left">    📄 CMakeLists.txt  <font color="#757575">project(exercise-003 VERSION 0.0.1)</font></td></tr>
+        <tr><td align="left" port="cin" bgcolor="#ffe0b2">    📄 config.h.in  <font color="#e65100">Vorlage</font></td></tr>
+        <tr><td align="left" port="main">    📄 main.cpp, version_cli.cpp, c_consumer.c</td></tr>
+      </table>>];
+
+    bld [label=<
+      <table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#e3f2fd">
+        <tr><td align="left" bgcolor="#1565c0"><font color="white"><b>Build-Baum (nicht in git)</b>  build/</font></td></tr>
+        <tr><td align="left">📁 libs/version/</td></tr>
+        <tr><td align="left" port="vout" bgcolor="#ffe0b2">    📄 include/version_config.h  <font color="#e65100">generiert, PRIVATE</font></td></tr>
+        <tr><td align="left" port="objs">    📁 CMakeFiles/version_library.dir/src/*.o</td></tr>
+        <tr><td align="left">📁 exercise-003/</td></tr>
+        <tr><td align="left" port="cout" bgcolor="#ffe0b2">    📄 include/config.h  <font color="#e65100">generiert</font></td></tr>
+        <tr><td align="left">📁 lib/</td></tr>
+        <tr><td align="left" port="a" bgcolor="#bbdefb">    📦 libversion_library.a  <font color="#1565c0">← ar: Archiv der .o (130 KB)</font></td></tr>
+        <tr><td align="left" port="so" bgcolor="#e1bee7">    📦 libversion_library.so → .so.0 → .so.0.1.2  <font color="#6a1b9a">← Linker -shared</font></td></tr>
+        <tr><td align="left">📁 bin/</td></tr>
+        <tr><td align="left" port="exe" bgcolor="#c8e6c9">    ⚙ exercise-003, -cli, -c, -shared</td></tr>
+        <tr><td align="left">    ⚙ version_library_test</td></tr>
+      </table>>];
+
+    src:vin:e -> bld:vout:w [color="#e65100", label="configure_file()\n@VAR@ ersetzen", fontcolor="#e65100"];
+    src:cin:e -> bld:cout:w [color="#e65100"];
+    src:srcs:e -> bld:objs:w [label="Compiler"];
+    src:main:e -> bld:exe:w  [label="Compiler + Linker"];
+}
