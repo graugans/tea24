@@ -1,0 +1,50 @@
+// Git-Lehrstück: Rebase + Merge = doppelte Commits
+digraph duplicates {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.25, ranksep=0.45,
+           label=<<b>Rebase + Merge = jeder Commit zweimal</b> – gleiche Änderung (gleiche patch-id), neuer Hash>,
+           labelloc=t, fontsize=15];
+    node [fontname="Courier", fontsize=9, shape=box, style="rounded,filled"];
+    edge [color="#616161"];
+
+    base [label="76f8ddc\nmerge-base", fillcolor="#eeeeee"];
+
+    subgraph cluster_sol {
+        label="solutions (06.11., ursprüngliche Commits)"; fontname="Helvetica"; fontsize=11; style="rounded,filled"; fillcolor="#e3f2fd"; color="#1565c0";
+        a1 [label="c8a4358\n(002-Lösung)", fillcolor="white"];
+        a2 [label="c28da02\nBaseline 003", fillcolor="white"];
+        a3 [label="6fc37ad\n…", fillcolor="white"];
+        a4 [label="c81720e\nVersion 0.1.2", fillcolor="white"];
+        a1 -> a2 [label="  …  ", fontname="Helvetica"]; a2 -> a3 -> a4 [label="", fontname="Helvetica"];
+    }
+    up [label="aa14a62 + b1e57e8\nupstream: PR #2\n(neuer main-Stand)", fillcolor="#fff9c4"];
+
+    subgraph cluster_ce {
+        label="ce/solution-003 (08.11. 12:04, nach Rebase auf upstream)"; fontname="Helvetica"; fontsize=11; style="rounded,filled"; fillcolor="#f3e5f5"; color="#6a1b9a";
+        b1 [label="e9400a2\n= c8a4358'", fillcolor="white"];
+        b2 [label="109493d\n= c28da02'", fillcolor="white"];
+        b3 [label="369f32c\n= 6fc37ad'", fillcolor="white"];
+        b4 [label="9af2e26\n= c81720e'", fillcolor="white"];
+        b1 -> b2 [label="  …  ", fontname="Helvetica"]; b2 -> b3 -> b4;
+    }
+
+    merge [label="c80a9ac  (08.11. 12:11)\nMerge 'ce/solution-003'\ninto solutions\n\ngit diff c81720e c80a9ac\n→ leer", fillcolor="#ffcdd2", color="#c62828"];
+
+    base -> a1; base -> up -> b1;
+    a4 -> merge; b4 -> merge;
+    a1 -> b1 [style=dashed, color="#c62828", constraint=false, dir=none];
+    a2 -> b2 [style=dashed, color="#c62828", constraint=false, dir=none,];
+    a4 -> b4 [style=dashed, color="#c62828", constraint=false, dir=none];
+
+    tip [shape=note, fontname="Helvetica", fontsize=10, fillcolor="#fafafa", color="#9e9e9e", label=<
+      <b>Erkennen</b><br align="left"/>
+      <font face="Courier">git cherry -v c81720e 9af2e26</font>   → 18× „-“ (schon enthalten)<br align="left"/>
+      <font face="Courier">git range-diff 76f8ddc..c81720e 76f8ddc..9af2e26</font><br align="left"/>
+      <br align="left"/>
+      <b>Vermeiden</b>: nach einem Rebase den alten Branch nicht mergen,<br align="left"/>
+      sondern ersetzen, z. B. <font face="Courier">git switch solutions</font><br align="left"/>
+      <font face="Courier">git reset --hard ce/solution-003</font>  (vorher prüfen!)<br align="left"/>
+      oder gleich <font face="Courier">git rebase ce/solution-003</font> – Git überspringt<br align="left"/>
+      Commits mit gleicher patch-id automatisch.<br align="left"/>>];
+    merge -> tip [style=invis];
+}

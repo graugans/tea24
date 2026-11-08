@@ -13,7 +13,8 @@ function(add_graphviz_diagrams target directory)
         return()
     endif()
 
-    file(GLOB dot_sources "${directory}/*.dot")
+    # CONFIGURE_DEPENDS: new *.dot files are picked up without re-running cmake by hand
+    file(GLOB dot_sources CONFIGURE_DEPENDS "${directory}/*.dot")
     set(svg_outputs "")
     foreach(dot_file ${dot_sources})
         get_filename_component(name ${dot_file} NAME_WE)

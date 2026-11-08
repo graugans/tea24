@@ -21,13 +21,14 @@ cmake --build build --target exercise-003-diagrams    # Grafiken neu erzeugen (b
 4. [Teil 4: Bibliothek in `exercise-003` verwenden](#teil-4-bibliothek-in-exercise-003-verwenden)
 5. [Teil 5: Verifizieren](#teil-5-verifizieren)
 6. [Fazit (Abgabe)](#fazit-abgabe)
-7. [Bonus 1: `isAtLeast()` + Unit-Tests](#bonus-1-isatleast--unit-tests)
-8. [Bonus 2: Zweiter Nutzer](#bonus-2-zweiter-nutzer-der-bibliothek)
-9. [Bonus 3: C-API und Name Mangling](#bonus-3-c-api-und-name-mangling)
-10. [Bonus 4: Statisch vs. dynamisch](#bonus-4-statische-vs-dynamische-bibliothek)
-11. [Bonus 5: Typische Fehler](#bonus-5-typische-anfängerfehler)
-12. [Bonus 6: Klausurmodus](#bonus-6-klausurmodus)
-13. [Stolperfallen, die in dieser Übung wirklich passiert sind](#stolperfallen-die-in-dieser-übung-wirklich-passiert-sind)
+7. [Wie die Lösung entstanden ist: die Git-Historie](#wie-die-lösung-entstanden-ist-die-git-historie)
+8. [Bonus 1: `isAtLeast()` + Unit-Tests](#bonus-1-isatleast--unit-tests)
+9. [Bonus 2: Zweiter Nutzer](#bonus-2-zweiter-nutzer-der-bibliothek)
+10. [Bonus 3: C-API und Name Mangling](#bonus-3-c-api-und-name-mangling)
+11. [Bonus 4: Statisch vs. dynamisch](#bonus-4-statische-vs-dynamische-bibliothek)
+12. [Bonus 5: Typische Fehler](#bonus-5-typische-anfängerfehler)
+13. [Bonus 6: Klausurmodus](#bonus-6-klausurmodus)
+14. [Stolperfallen, die in dieser Übung wirklich passiert sind](#stolperfallen-die-in-dieser-übung-wirklich-passiert-sind)
 
 ---
 
@@ -328,6 +329,123 @@ fehlt nicht zuerst das Symbol, sondern schon **der Header**.
 Ein Sonderfall: `fmt` ist bei der Bibliothek `PRIVATE`. Weil eine statische Bibliothek aber nur ein Archiv mit offenen
 Referenzen (`U fmt::v12::vformat`) ist, reicht CMake `fmt` trotzdem als `$<LINK_ONLY:fmt::fmt>` an die Nutzer weiter:
 **Link ja, Include-Pfad nein.**
+
+---
+
+## Wie die Lösung entstanden ist: die Git-Historie
+
+Die Lösung ist nicht in einem Wurf entstanden, sondern in **sieben kleinen Commits innerhalb von 39 Minuten**. Erst
+wurde eine lauffähige Baseline geschaffen, dann Schritt für Schritt erweitert. Danach folgte ein Review mit
+Korrekturen. Das ist kein Zufall, sondern eine bewährte Arbeitsweise, und die Historie zeigt sie sehr schön.
+
+```sh
+git log --oneline --reverse c28da02~1..c81720e -- exercise-003 libs CMakeLists.txt
+git show 0e69bb5                    # einen einzelnen Schritt ansehen
+git diff c28da02 c81720e --stat     # alles zusammen
+```
+
+![Git-Historie](doc/12_git_history.svg)
+
+**Jeder Zwischenstand wurde nachträglich einzeln gebaut und ausgeführt**
+(`git archive <commit> | tar -x` in einen leeren Ordner, dann `cmake` und `cmake --build`). Alle sieben Commits
+bauen, und jeder Commit gibt genau das aus, was die Grafik zeigt.
+
+### Die Schritte im Einzelnen
+
+| # | Commit | Was passiert | Warum das ein guter Schritt ist |
+| --- | --- | --- | --- |
+| ① | `c28da02` | **Baseline**: `exercise-003` aus der Vorlage der anderen Übungen (CMakeLists, `config.h.in`, `main.cpp`), im Root eingebunden | Ein bekannter, lauffähiger Ausgangspunkt. Alles, was ab jetzt kaputtgeht, liegt an den eigenen Änderungen. |
+| ② | `6fc37ad` | **Gerüst**: die Ordnerstruktur aus Teil 1, drei **leere** Dateien und `version_config.h.in` | Die Struktur steht, bevor Logik hineinkommt, und lässt sich mit der Aufgabe abgleichen. |
+| ③ | `0e69bb5` | **Verdrahtung**: `add_library(… STATIC)`, `add_subdirectory(libs)`, `target_link_libraries(exercise-003 … version_library)`. `version.cpp` ist noch **0 Byte** groß | Ein „Walking Skeleton“: Die gesamte Build-Kette (Bibliothek → Archiv → Link) funktioniert, obwohl noch keine Zeile Code existiert. `libversion_library.a` enthält ein leeres `version.cpp.o` (`size`: 0 Byte). CMake-Fehler fallen jetzt auf, getrennt von C++-Fehlern. |
+| ④ | `a825d9d` | **API mit Platzhaltern**: `projectName()` liefert `"Hello World"`, `major()` liefert `0`. `fullVersion()` ist noch auskommentiert | Schnittstelle und Aufruf aus `main.cpp` stehen. Die Ausgabe `Hello, from the lib: Hello World!` beweist, dass der Aufruf wirklich in der Bibliothek ankommt. |
+| ⑤ | `4df91b3` | **Echte Implementierung**: `configure_file`, Werte aus `project(VERSION)`, `fmt` in der Bibliothek, `fullVersion()`. Die Versionskonstanten werden dabei von Strings zu `unsigned int` | Jetzt erst kommt die eigentliche Logik, auf einem Fundament, das bereits funktioniert. |
+| ⑥ | `3db73a6` | **Probe aufs Exempel**: Nur `project(version_library VERSION 0.1.0)` wurde geändert | Ein Test der zentralen Idee („Single Source of Truth“): **eine** Zeile in CMake ändern, und die Ausgabe folgt (`0.0.1` → `0.1.0`). |
+| ⑦ | `c81720e` | Version `0.1.2`, Ausgabe der Einzelteile `major()`, `minor()`, `patch()` | Feinschliff |
+| ⑧ | `378328c` | **Review**: Refactoring, Fehlerkorrekturen, alle Bonusaufgaben, diese SOLUTION, in **einem** Commit (37 Dateien, +3290 Zeilen) | siehe [Wie geht es weiter?](#wie-geht-es-weiter) |
+
+### Was das Review gefunden hat und wo die Fehler entstanden sind
+
+Weil die Schritte so klein sind, lässt sich jeder Fehler auf **einen** Commit zurückführen:
+
+| Fehler | entstanden in | wie |
+| --- | --- | --- |
+| Gleicher Guard `CONFIG_H_IN` und gleiche Namen in beiden Konfig-Headern ([Stolperfalle 2](#stolperfalle-2-zwei-konfig-header-mit-gleichem-guard-und-namespace)) | ② `6fc37ad` | `version_config.h.in` ist eine **1:1-Kopie** von `exercise-003/config.h.in`, zu erkennen am identischen Inhalt im Diff |
+| `#include <string>` vor dem Include Guard | ⑤ `4df91b3` | Include oben eingefügt, über `#ifndef` |
+| `"The minor version from the lib: {}", patch()` | ⑦ `c81720e` | Zeile kopiert, nur der Funktionsaufruf angepasst |
+
+Solche Fragen beantwortet Git direkt: `git log -S 'CONFIG_H_IN' -- libs/` findet alle Commits, in denen der Text
+hinzukam oder verschwand, hier `6fc37ad` (eingeführt) und `378328c` (im Review entfernt). `git blame exercise-003/main.cpp` zeigt für jede Zeile den letzten Commit, der sie geändert hat. Ist nur das
+Symptom bekannt, findet `git bisect` den schuldigen Commit automatisch per Binärsuche. Das funktioniert aber nur,
+wenn **jeder Commit baut**. Genau das wurde oben nachgewiesen.
+
+**Kleine Anmerkung zu den Commit-Nachrichten:** Der Titel von ② verspricht „add versioning files including
+CMakeLists.txt, version.h, version.cpp“, die Dateien waren aber leer. Ehrlicher wäre z. B.
+`chore: create empty skeleton for version library`. Die reinen Versionssprünge ⑥ und ⑦ würde man nach
+[Conventional Commits](https://www.conventionalcommits.org/) eher als `build:` oder `chore:` statt `feat:` markieren,
+denn sie fügen kein Feature hinzu.
+
+### Git-Lehrstück: jeder Commit zweimal
+
+Ein Blick auf `git log --graph` zeigt eine Überraschung: Die sieben Commits (und alle Commits der Lösung zu
+Übung 002) gibt es **zweimal**, mit unterschiedlichen Hashes.
+
+![Doppelte Commits](doc/13_git_duplicates.svg)
+
+Was passiert ist (rekonstruiert aus Author- und Committer-Datum):
+
+1. Am 06.11. entstanden die Commits auf `solutions` (z. B. `c81720e`).
+2. Am 08.11. um 12:04 wurde `ce/solution-003` auf den neuen Upstream-Stand (PR #2) **rebased**. Ein Rebase schreibt
+   jeden Commit neu: Das Author-Datum bleibt (06.11. 14:50), das Committer-Datum und damit der Hash ändern sich
+   (`c81720e` → `9af2e26`).
+3. Um 12:11 wurde `ce/solution-003` in `solutions` **gemergt**. Für Git sind das 20 fremde Commits, obwohl 18 davon
+   inhaltlich schon vorhanden waren.
+
+Die Belege:
+
+```text
+$ git show c81720e | git patch-id --stable      $ git show 9af2e26 | git patch-id --stable
+fe8eeba29a7c…                                   fe8eeba29a7c…            <- gleiche Änderung
+
+$ git cherry c81720e 9af2e26 | cut -c1 | sort | uniq -c
+     18 -          <- "schon enthalten" (gleiche patch-id)
+      1 +          <- wirklich neu: aa14a62 (Upstream-Commit)
+
+$ git diff c81720e c80a9ac                    <- der Merge ändert keinen Inhalt
+(keine Ausgabe)
+```
+
+Schaden ist keiner entstanden, denn der Inhalt ist korrekt. Die Historie ist aber doppelt so lang und schwerer zu
+lesen, und `git blame` bzw. `git bisect` können auf einer der beiden Kopien landen. **Faustregel: Einen Branch, der
+rebased wurde, nicht mit seiner alten Version mergen, sondern die alte Version ersetzen.** Möglich ist
+z. B. `git rebase ce/solution-003` (Git überspringt Commits mit gleicher patch-id automatisch) oder nach sorgfältiger
+Prüfung `git reset --hard ce/solution-003`. Vorher zeigt `git range-diff`, ob die beiden Versionen wirklich gleich sind.
+
+### Wie geht es weiter?
+
+Das Review ⑧ ist als **ein** großer Commit `378328c` eingegangen. Im direkten Vergleich sieht man den Unterschied:
+
+| | Schritte ①–⑦ | Schritt ⑧ |
+| --- | --- | --- |
+| Commits | 7 | 1 |
+| Größe | 1 bis 30 Zeilen pro Commit | 37 Dateien, +3290 Zeilen |
+| `git bisect` findet … | den einzelnen schuldigen Schritt | nur „irgendwo in ⑧“ |
+| Revert einer Teiländerung | `git revert <commit>` | nur von Hand |
+
+Für Dokumentation und Grafiken ist ein Sammel-Commit vertretbar. Code-Änderungen teilt man im Sinne der Historie oben
+besser in kleine, einzeln baubare Commits auf. Für ⑧ hätte das zum Beispiel so aussehen können:
+
+```text
+fix(exercise-003): label patch() output correctly
+fix(version): unique include guards and namespace for generated config headers
+refactor(version): move API into namespace tea::version, add ALIAS tea24::version
+feat(version): add isAtLeast() with Catch2 tests                    (Bonus 1)
+feat(exercise-003): add exercise-003-cli as second consumer         (Bonus 2)
+feat(version): add C API and C consumer                             (Bonus 3)
+feat(version): build shared variant, compare with dladdr()          (Bonus 4)
+docs(exercise-003): add SOLUTION.md with diagrams
+```
+
+`git add -p` hilft dabei, aus einer Datei nur einzelne Änderungen in einen Commit zu übernehmen.
 
 ---
 
