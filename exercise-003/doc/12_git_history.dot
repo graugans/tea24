@@ -9,49 +9,49 @@ digraph history {
 
     s1 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#616161" width="110"><font color="white"><b>① c28da02</b><br/>14:11</font></td>
+        <tr><td bgcolor="#616161" width="110"><font color="white"><b>① 1fb10ed</b><br/>14:11</font></td>
             <td bgcolor="#eeeeee" align="left" width="300"><b>Baseline</b>: Übung aus der Vorlage<br align="left"/>CMakeLists, config.h.in, main.cpp – noch keine Bibliothek</td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Hello, exercise-003!</font></td></tr>
       </table>>];
     s2 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#6a1b9a" width="110"><font color="white"><b>② 6fc37ad</b><br/>14:15</font></td>
+        <tr><td bgcolor="#6a1b9a" width="110"><font color="white"><b>② d0f4d57</b><br/>14:15</font></td>
             <td bgcolor="#f3e5f5" align="left" width="300"><b>Gerüst</b>: Ordnerstruktur aus Teil 1<br align="left"/>3 leere Dateien + version_config.h.in<br align="left"/><font color="#c62828">⚠ 1:1 aus config.h.in kopiert → Guard CONFIG_H_IN</font></td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Hello, exercise-003!</font></td></tr>
       </table>>];
     s3 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#1565c0" width="110"><font color="white"><b>③ 0e69bb5</b><br/>14:23</font></td>
+        <tr><td bgcolor="#1565c0" width="110"><font color="white"><b>③ ee1881c</b><br/>14:23</font></td>
             <td bgcolor="#e3f2fd" align="left" width="300"><b>Verdrahtung</b> („Walking Skeleton“)<br align="left"/>add_library STATIC, add_subdirectory(libs),<br align="left"/>target_link_libraries – version.cpp noch <b>0 Byte</b></td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Hello, exercise-003!</font><br align="left"/><font point-size="9">+ libversion_library.a (leeres .o)</font></td></tr>
       </table>>];
     s4 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#00838f" width="110"><font color="white"><b>④ a825d9d</b><br/>14:29</font></td>
+        <tr><td bgcolor="#00838f" width="110"><font color="white"><b>④ c4a37b9</b><br/>14:29</font></td>
             <td bgcolor="#e0f7fa" align="left" width="300"><b>API mit Platzhaltern</b> (Stubs)<br align="left"/>projectName() → "Hello World", major() → 0<br align="left"/>fullVersion() noch auskommentiert</td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Hello, from the lib: Hello World!</font></td></tr>
       </table>>];
     s5 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#2e7d32" width="110"><font color="white"><b>⑤ 4df91b3</b><br/>14:42</font></td>
+        <tr><td bgcolor="#2e7d32" width="110"><font color="white"><b>⑤ fa0e9a8</b><br/>14:42</font></td>
             <td bgcolor="#e8f5e9" align="left" width="300"><b>Echte Implementierung</b><br align="left"/>configure_file, Konstanten als int statt String,<br align="left"/>fmt in der Bibliothek, fullVersion()<br align="left"/><font color="#c62828">⚠ #include &lt;string&gt; vor dem Include Guard</font></td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Hello, from the lib: version_library!<br align="left"/>The full version from the lib: 0.0.1</font></td></tr>
       </table>>];
     s6 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#f9a825" width="110"><font color="white"><b>⑥ 3db73a6</b><br/>14:48</font></td>
+        <tr><td bgcolor="#f9a825" width="110"><font color="white"><b>⑥ d362c78</b><br/>14:48</font></td>
             <td bgcolor="#fffde7" align="left" width="300"><b>Probe aufs Exempel</b>: nur project(VERSION 0.1.0)<br align="left"/>geändert – eine Zeile, Ausgabe folgt</td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">The full version from the lib: 0.1.0</font></td></tr>
       </table>>];
     s7 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#ef6c00" width="110"><font color="white"><b>⑦ c81720e</b><br/>14:50</font></td>
+        <tr><td bgcolor="#ef6c00" width="110"><font color="white"><b>⑦ 1d9f39a</b><br/>14:50</font></td>
             <td bgcolor="#fff3e0" align="left" width="300"><b>Version 0.1.2 + Einzelausgaben</b><br align="left"/><font color="#c62828">⚠ "The minor version …" vor patch()</font></td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">The minor version from the lib: 1<br align="left"/>The minor version from the lib: 2</font></td></tr>
       </table>>];
     s8 [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr><td bgcolor="#424242" width="110"><font color="white"><b>⑧ 378328c</b><br/>08.11. 13:52</font></td>
+        <tr><td bgcolor="#424242" width="110"><font color="white"><b>⑧ b8bfbcc</b><br/>08.11. 13:52</font></td>
             <td bgcolor="#f5f5f5" align="left" width="300"><b>Review</b>: Refactoring + Bonusaufgaben + SOLUTION<br align="left"/><font color="#c62828">⚠ ein Sammel-Commit: 37 Dateien, +3290 Zeilen</font><br align="left"/><font color="#2e7d32">✓ Guards eindeutig ✓ include im Guard ✓ "Patch:"</font><br align="left"/>Namespace, ALIAS, PRIVATE-Header, Tests, C-API, .so</td>
             <td bgcolor="#fafafa" align="left" width="270"><font face="Courier" point-size="9">Full:    version_library-0.1.2</font><br align="left"/><font point-size="9">+ 21 Testprüfungen grün</font></td></tr>
       </table>>];
