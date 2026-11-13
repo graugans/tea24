@@ -4,6 +4,37 @@ Begleitprojekt für Mikrocomputertechnik 3 im Kurs tea24 an der DHBW Ravensburg 
 
 **WICHTIG** Bitte verwenden sie zur Entwicklung die vorgefertigten Umgebungen.
 
+## Musterlösungen
+
+Die Musterlösungen liegen **nicht** auf dem `main` Branch, sondern im Branch
+[`solutions`](https://github.com/graugans/tea24/tree/solutions). So bleiben die Aufgaben auf `main` unverändert, und
+Sie können sie zuerst selbst lösen.
+
+| Übungsaufgabe | Musterlösung |
+| --- | --- |
+| [Nr. 001](exercise-001/README.md) | [exercise-001/SOLUTION.md](https://github.com/graugans/tea24/blob/solutions/exercise-001/SOLUTION.md) |
+| [Nr. 002](exercise-002/README.md) | [exercise-002/SOLUTION.md](https://github.com/graugans/tea24/blob/solutions/exercise-002/SOLUTION.md) |
+| [Nr. 003](exercise-003/README.md) | [exercise-003/SOLUTION.md](https://github.com/graugans/tea24/blob/solutions/exercise-003/SOLUTION.md) |
+
+Lokal ansehen und ausprobieren:
+
+```sh
+git fetch upstream
+git switch -c solutions upstream/solutions   # einmalig: lokalen Branch anlegen
+```
+
+Später auf den neuesten Stand bringen:
+
+```sh
+git fetch upstream
+git switch solutions
+git reset --hard upstream/solutions
+```
+
+Der Branch `solutions` wird gelegentlich überarbeitet. Verwenden Sie deshalb `reset --hard` statt `pull` und machen
+Sie auf diesem Branch **keine eigenen Commits**. Ihre eigenen Lösungen gehören in eigene Branches (z. B.
+`solution-002`).
+
 
 ## Synchronisation des eignen Forks
 
