@@ -1,5 +1,21 @@
 # Vom Quelltext zur ausführbaren Datei
 
+## Notwendige git Kommandos
+
+```sh
+git status
+git branch -a
+git switch main
+git fetch --all
+# create a new local branch based on exercise-003
+git switch -c solution-004 upstream/main
+# perform changes
+git add exercise-004 
+git commit -m "feat: solve exercise-004 Part One"
+# push the changes to the cloud
+git push -u origin solution-004
+```
+
 ## Überblick: Jede Stufe erzeugt eine andere Art von Datei
 
 ![Build-Prozess: von C/C++-Quellcode zu Maschinencode](img/graphviz.svg)
