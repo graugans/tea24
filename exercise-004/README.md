@@ -192,7 +192,7 @@ Fragen zu Teil D:
 
 ## Teil E (Bonus): Übungsaufgabe 3 komplett statisch
 
-Voraussetzung: Übungsaufgabe 3 ist gelöst und `build/bin/exercise-003` lässt sich bauen.
+Voraussetzung: Übungsaufgabe 3 ist gelöst und `build/bin/exercise-004` lässt sich bauen.
 
 ### E.1 Wer ist hier eigentlich statisch?
 
@@ -200,9 +200,9 @@ Voraussetzung: Übungsaufgabe 3 ist gelöst und `build/bin/exercise-003` lässt 
 |---|---|---|
 | 1. Bibliothek | `ls -l build/lib` |  |
 | | `ar t build/lib/libversion.a` |  |
-| 2. Abhängigkeiten | `ldd build/bin/exercise-003` |  |
-| 3. Symbole | `nm -C build/bin/exercise-003 \| grep -i version` |  |
-| | `nm -C build/bin/exercise-003 \| grep 'fmt::' \| head` |  |
+| 2. Abhängigkeiten | `ldd build/bin/exercise-004` |  |
+| 3. Symbole | `nm -C build/bin/exercise-004 \| grep -i version` |  |
+| | `nm -C build/bin/exercise-004 \| grep 'fmt::' \| head` |  |
 
 Fragen:
 
@@ -213,11 +213,11 @@ Fragen:
 
 Im Container ist `{fmt}` nur als Shared Library (`libfmt.so`) installiert, eine `libfmt.a` gibt es nicht. `{fmt}` bietet aber zusätzlich das CMake-Target `fmt::fmt-header-only` an: Dann wird der komplette `{fmt}`-Code beim Übersetzen in das eigene Programm eingebaut.
 
-Lege in `exercise-003/CMakeLists.txt` ein zweites Executable an:
+Lege in `exercise-004/CMakeLists.txt` ein zweites Executable an:
 
 ```cmake
-add_executable(exercise-003-static main.cpp)
-target_link_libraries(exercise-003-static PRIVATE version fmt::fmt-header-only)
+add_executable(exercise-004-static main.cpp)
+target_link_libraries(exercise-004-static PRIVATE version fmt::fmt-header-only)
 ```
 
 > **Achtung:** Falls deine Bibliothek `version` selbst gegen `fmt::fmt` linkt (`PUBLIC`), musst du sie ebenfalls umstellen. `fmt::fmt` und `fmt::fmt-header-only` dürfen nicht im selben Programm gemischt werden.
@@ -225,25 +225,25 @@ target_link_libraries(exercise-003-static PRIVATE version fmt::fmt-header-only)
 | Schritt | Befehl | Was ich sehe |
 |---|---|---|
 | 1. Bauen | `cmake --build build` |  |
-| 2. Vergleichen | `ldd build/bin/exercise-003-static` |  |
-| | `ls -l build/bin/exercise-003 build/bin/exercise-003-static` |  |
+| 2. Vergleichen | `ldd build/bin/exercise-004-static` |  |
+| | `ls -l build/bin/exercise-004 build/bin/exercise-004-static` |  |
 
 ### E.3 Alles statisch
 
 Jetzt sollen auch `libstdc++` und `libc` hinein. Ergänze:
 
 ```cmake
-add_executable(exercise-003-full-static main.cpp)
-target_link_libraries(exercise-003-full-static PRIVATE version fmt::fmt-header-only)
-target_link_options(exercise-003-full-static PRIVATE -static)
+add_executable(exercise-004-full-static main.cpp)
+target_link_libraries(exercise-004-full-static PRIVATE version fmt::fmt-header-only)
+target_link_options(exercise-004-full-static PRIVATE -static)
 ```
 
 | Schritt | Befehl | Was ich sehe |
 |---|---|---|
-| 1. Bauen und starten | `./build/bin/exercise-003-full-static` |  |
-| 2. Prüfen | `ldd build/bin/exercise-003-full-static` |  |
-| | `file build/bin/exercise-003-full-static` |  |
-| 3. Größen | `ls -lh build/bin/exercise-003*` |  |
+| 1. Bauen und starten | `./build/bin/exercise-004-full-static` |  |
+| 2. Prüfen | `ldd build/bin/exercise-004-full-static` |  |
+| | `file build/bin/exercise-004-full-static` |  |
+| 3. Größen | `ls -lh build/bin/exercise-004*` |  |
 
 Fragen zu Teil E:
 
