@@ -1,1 +1,3 @@
-#define ZEICHEN 'A'
+#define ZEICHEN 'C'
+
+void gruss(void);
