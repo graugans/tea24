@@ -32,3 +32,16 @@ target_link_libraries(${PROJECT_NAME}-static PRIVATE
                                         tea24::version_fmt_header_only
                                         fmt::fmt-header-only
 )
+
+############################################################
+# E.3: alles statisch - auch libstdc++, libm und libc
+############################################################
+
+# -static braucht die statischen Varianten libc.a, libm.a und libstdc++.a
+# (Debian/Ubuntu: libc6-dev, Fedora: glibc-static und libstdc++-static).
+add_executable(${PROJECT_NAME}-full-static main.cpp)
+target_link_libraries(${PROJECT_NAME}-full-static PRIVATE
+                                        tea24::version_fmt_header_only
+                                        fmt::fmt-header-only
+)
+target_link_options(${PROJECT_NAME}-full-static PRIVATE -static)
