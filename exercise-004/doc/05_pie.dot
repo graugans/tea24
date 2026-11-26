@@ -1,0 +1,35 @@
+// PIE: Position Independent Executable
+digraph pie {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.6,
+           label=<<b>PIE vs. -no-pie</b> – dasselbe Programm, zweimal gestartet (gcc 14, ASLR aktiv)>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9];
+
+    pie [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="3" bgcolor="#2e7d32"><font color="white"><b>PIE</b> (Standard: gcc --enable-default-pie)</font></td></tr>
+        <tr><td bgcolor="#eeeeee"></td><td bgcolor="#eeeeee"><b>nm</b></td><td bgcolor="#eeeeee"><b>Laufzeit</b></td></tr>
+        <tr><td align="left">main, Start 1</td><td rowspan="2"><font face="Courier">0x1129</font><br/>(Offset)</td><td align="left"><font face="Courier">0x55ee<b>ea675</b>129</font></td></tr>
+        <tr><td align="left">main, Start 2</td><td align="left"><font face="Courier">0x5556<b>443c0</b>129</font></td></tr>
+        <tr><td colspan="3" align="left" bgcolor="#e8f5e9">readelf -h: <b>DYN</b> (Position-Independent Executable)<br align="left"/>Ladeadresse zufällig, Abstände bleiben gleich<br align="left"/>→ Laufzeitadresse = Basis + nm-Offset<br align="left"/></td></tr>
+      </table>>];
+    nopie [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
+        <tr><td colspan="3" bgcolor="#c62828"><font color="white"><b>-no-pie</b></font></td></tr>
+        <tr><td bgcolor="#eeeeee"></td><td bgcolor="#eeeeee"><b>nm</b></td><td bgcolor="#eeeeee"><b>Laufzeit</b></td></tr>
+        <tr><td align="left">main, Start 1</td><td rowspan="2"><font face="Courier">0x401126</font><br/>(feste Adresse)</td><td align="left"><font face="Courier">0x401126</font></td></tr>
+        <tr><td align="left">main, Start 2</td><td align="left"><font face="Courier">0x401126</font></td></tr>
+        <tr><td colspan="3" align="left" bgcolor="#ffebee">readelf -h: <b>EXEC</b><br align="left"/>Programm liegt immer an derselben Stelle<br align="left"/>→ objdump-Adressen = echte Adressen<br align="left"/></td></tr>
+      </table>>];
+    why [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", label=<
+      <b>Warum PIE?</b> Sicherheit: Ein Angreifer, der einen Speicherfehler ausnutzt,<br align="left"/>
+      kennt die Adressen von Code und Daten nicht im Voraus (ASLR).<br align="left"/>
+      <b>Wie?</b> Der Code adressiert relativ zum Befehlszähler (%rip) statt absolut,<br align="left"/>
+      Bibliotheksfunktionen über PLT/GOT. Auf x86-64 kostet das kaum Leistung.<br align="left"/>
+      <b>Statisch?</b> gcc -static → EXEC (feste Adressen), gcc -static-pie → DYN<br align="left"/>
+      <b>Mikrocontroller:</b> kein Loader, kein ASLR → feste Adressen aus dem Linkerskript<br align="left"/>>];
+    pie -> nopie [style=invis];
+    nopie -> why [style=invis];
+}

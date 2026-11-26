@@ -45,3 +45,7 @@ target_link_libraries(${PROJECT_NAME}-full-static PRIVATE
                                         fmt::fmt-header-only
 )
 target_link_options(${PROJECT_NAME}-full-static PRIVATE -static)
+
+# Diagrams for SOLUTION.md (optional, needs Graphviz):
+#   cmake --build build --target exercise-004-diagrams
+add_graphviz_diagrams(${PROJECT_NAME}-diagrams "${CMAKE_CURRENT_SOURCE_DIR}/doc")

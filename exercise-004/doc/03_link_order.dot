@@ -1,0 +1,27 @@
+// Teil D, Frage 2: Warum -lgreet vor main.o scheitert
+digraph order {
+    rankdir=TB;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.35, newrank=true,
+           label=<<b>Frage D2: Der Linker liest von links nach rechts</b> – aus einem Archiv nimmt er nur, was <i>bis dahin</i> fehlt>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    subgraph cluster_ok {
+        label=<<font face="Courier">gcc main.o -L. -lgreet -o main_lib</font>   ✓>; style="rounded,filled"; fillcolor="#e8f5e9"; color="#2e7d32";
+        ok1 [fillcolor="white", label="① main.o lesen\noffen: { gruss }"];
+        ok2 [fillcolor="white", label="② libgreet.a durchsuchen\ngruss fehlt → greet.o übernehmen\noffen: { }"];
+        ok3 [fillcolor="#c8e6c9", label="③ fertig → main_lib gibt C aus"];
+        ok1 -> ok2 -> ok3;
+    }
+    subgraph cluster_bad {
+        label=<<font face="Courier">gcc -L. -lgreet main.o -o main_lib</font>   ✗>; style="rounded,filled"; fillcolor="#ffebee"; color="#c62828";
+        bad1 [fillcolor="white", label="① libgreet.a durchsuchen\noffen: { } → nichts gebraucht,\ngreet.o wird NICHT übernommen"];
+        bad2 [fillcolor="white", label="② main.o lesen\noffen: { gruss }"];
+        bad3 [fillcolor="#ffcdd2", label="③ Ende, gruss fehlt noch:\nundefined reference to `gruss'"];
+        bad1 -> bad2 -> bad3;
+    }
+    {rank=same; ok1; bad1;}
+    note [shape=note, fillcolor="#fafafa", color="#9e9e9e", label="Gilt nur für Archive (.a).\nObjektdateien (.o) werden immer komplett übernommen:\ngcc greet.o main.o -o main funktioniert in jeder Reihenfolge."];
+    ok3 -> note [style=invis]; bad3 -> note [style=invis];
+}

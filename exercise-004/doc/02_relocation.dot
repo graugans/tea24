@@ -1,0 +1,18 @@
+// Teil A, Frage 4: call putc in main.o und in main
+digraph reloc {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.7,
+           label=<<b>Frage A4: Was steht bei call putc?</b> Der Assembler lässt eine Lücke, der Linker füllt sie, der Loader verbindet zur libc>,
+           labelloc=t, fontsize=15];
+    node [fontname="Courier", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    o [fillcolor="#e8f5e9", color="#2e7d32", label="main.o  (objdump -dr)\l13: e8 00 00 00 00   call 18 <main+0x18>\l      14: R_X86_64_PLT32  putc-0x4\l\lZiel = 0  →  Lücke + Relocation-Eintrag:\l„hier bitte die Adresse von putc einsetzen“\l"];
+    x [fillcolor="#ffebee", color="#c62828", label="main  (objdump -d)\l114c: e8 df fe ff ff   call 1030 <putc@plt>\l\l0xfffffedf = -289:\l0x1151 - 289 = 0x1030\l"];
+    plt [fillcolor="#fff3e0", color="#e65100", label="1030 <putc@plt>:\ljmp *0x2fca(%rip)   # GOT-Eintrag\l"];
+    libc [fillcolor="#eeeeee", color="#616161", label="libc.so.6\lputc (echter Code)\l"];
+
+    o -> x [label="Linker (ld)\nfüllt die Lücke", fontname="Helvetica"];
+    x -> plt [label="relativer Sprung", fontname="Helvetica"];
+    plt -> libc [style=dashed, label="Adresse im GOT trägt\nder Loader ld.so beim Start ein", fontname="Helvetica"];
+}

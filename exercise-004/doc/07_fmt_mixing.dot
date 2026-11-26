@@ -1,0 +1,25 @@
+// Teil E.2: Warum die Umstellung nur im Programm nicht reicht
+digraph mixing {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.7,
+           label=<<b>Teil E.2: header-only nur im Programm reicht nicht</b> – die statische Bibliothek bringt libfmt.so wieder mit>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    subgraph cluster_bad {
+        label="Aufgabe wörtlich: tea24::version + fmt::fmt-header-only"; style="rounded,filled"; fillcolor="#ffebee"; color="#c62828";
+        lib1 [fillcolor="white", label="libversion_library.a\nPRIVATE fmt::fmt\nU fmt::v12::vformat"];
+        exe1 [fillcolor="white", label="Programm: FMT_HEADER_ONLY\nW fmt::v12::vformat\n(eigene Kopie)"];
+        so1 [fillcolor="#e1bee7", label="libfmt.so.12\nNEEDED, aber 0 Symbole benutzt"];
+        lib1 -> exe1 [label="U vformat wird von der\nKopie im Programm aufgelöst"];
+        lib1 -> so1 [style=dashed, label="$<LINK_ONLY:fmt::fmt>"];
+    }
+    subgraph cluster_ok {
+        label="Lösung: tea24::version_fmt_header_only + fmt::fmt-header-only"; style="rounded,filled"; fillcolor="#e8f5e9"; color="#2e7d32";
+        lib2 [fillcolor="white", label="libversion_library_fmt_header_only.a\nPRIVATE fmt::fmt-header-only\n(gleiche Quellen)"];
+        exe2 [fillcolor="white", label="Programm: FMT_HEADER_ONLY\n{fmt} komplett im Programm"];
+        ok2 [fillcolor="#c8e6c9", label="ldd: kein libfmt.so ✓"];
+        lib2 -> exe2 -> ok2;
+    }
+}

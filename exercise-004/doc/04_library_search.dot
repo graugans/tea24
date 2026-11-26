@@ -1,0 +1,26 @@
+// Teil D, Fragen 1, 3, 4: Suche zur Linkzeit und zur Laufzeit
+digraph search {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.6,
+           label=<<b>Zwei verschiedene Suchen</b> – der Linker beim Bauen, der Loader beim Starten>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=9];
+
+    subgraph cluster_link {
+        label="Linkzeit: gcc main.o -L. -lgreet -o main_so"; style="rounded,filled"; fillcolor="#e3f2fd"; color="#1565c0";
+        l1 [fillcolor="white", label="-lgreet  →  sucht\nlibgreet.so, dann libgreet.a"];
+        l2 [fillcolor="white", label="Verzeichnisse:\n1. -L.  (hier)\n2. /usr/lib/…, /lib/…"];
+        l3 [fillcolor="#bbdefb", label="beide da → libgreet.so gewinnt\n(Beleg: ldd/readelf zeigen\nNEEDED libgreet.so)"];
+        l1 -> l2 -> l3;
+    }
+    subgraph cluster_run {
+        label="Laufzeit: ./main_so"; style="rounded,filled"; fillcolor="#f3e5f5"; color="#6a1b9a";
+        r0 [fillcolor="white", label="ld.so liest NEEDED:\nlibgreet.so"];
+        r1 [fillcolor="white", label="sucht in:\n1. RUNPATH im Programm\n2. LD_LIBRARY_PATH\n3. /etc/ld.so.cache\n4. /lib, /usr/lib"];
+        r2 [fillcolor="#ffcdd2", label="„.“ steht nirgends →\nerror while loading shared libraries:\nlibgreet.so: cannot open shared object file"];
+        r3 [fillcolor="#c8e6c9", label="Abhilfe:\nLD_LIBRARY_PATH=. ./main_so\noder -Wl,-rpath,'$ORIGIN'\n→ RUNPATH [$ORIGIN]"];
+        r0 -> r1 -> r2; r1 -> r3 [style=dashed];
+    }
+    l3 -> r0 [label="Programm enthält nur\nden NAMEN der Bibliothek", style=bold];
+}

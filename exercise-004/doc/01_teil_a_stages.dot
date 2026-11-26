@@ -1,0 +1,41 @@
+// Teil A: Was jede Stufe aus main.c macht - mit echten Größen
+digraph stages {
+    rankdir=LR;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.45,
+           label=<<b>Teil A mit echten Zahlen</b> – gcc 14, Teil-A-Stand aus Commit „step #1“>,
+           labelloc=t, fontsize=15];
+    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=9, color="#424242", penwidth=1.5];
+
+    c [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#f9a825"><font color="white"><b>main.c</b></font></td></tr>
+        <tr><td bgcolor="#fffde7" align="left">10 Zeilen, 143 Byte</td></tr>
+        <tr><td bgcolor="#fffde7" align="left"><font face="Courier">#include &lt;stdio.h&gt;</font><br align="left"/><font face="Courier">putc(ZEICHEN, stdout);</font><br align="left"/></td></tr>
+      </table>>];
+    i [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#6a1b9a"><font color="white"><b>main.i</b>  (1) gcc -E</font></td></tr>
+        <tr><td bgcolor="#f3e5f5" align="left"><b>830 Zeilen</b>, 21 KB (ohne Marken: 312)</td></tr>
+        <tr><td bgcolor="#f3e5f5" align="left">stdio.h eingefügt, nur Deklarationen:<br align="left"/><font face="Courier">extern int putc(int, FILE*);</font><br align="left"/><font face="Courier">putc('A', stdout);</font>  ← ZEICHEN ersetzt<br align="left"/></td></tr>
+      </table>>];
+    s [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#1565c0"><font color="white"><b>main.s</b>  (2) gcc -S</font></td></tr>
+        <tr><td bgcolor="#e3f2fd" align="left">31 Zeilen Assembler, 538 Byte</td></tr>
+        <tr><td bgcolor="#e3f2fd" align="left"><font face="Courier">.local our_bss</font><br align="left"/><font face="Courier">movl $65, %edi</font>  ← 'A' = 65<br align="left"/><font face="Courier">call putc@PLT</font><br align="left"/></td></tr>
+      </table>>];
+    o [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#2e7d32"><font color="white"><b>main.o</b>  (3) gcc -c</font></td></tr>
+        <tr><td bgcolor="#e8f5e9" align="left">Maschinencode, 1,4 KB</td></tr>
+        <tr><td bgcolor="#e8f5e9" align="left"><font face="Courier">T main</font><br align="left"/><font face="Courier">b our_bss</font><br align="left"/><font face="Courier">U putc   U stdout</font>  ← Lücken<br align="left"/></td></tr>
+      </table>>];
+    x [label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr><td bgcolor="#c62828"><font color="white"><b>main</b>  (4) gcc</font></td></tr>
+        <tr><td bgcolor="#ffebee" align="left">ELF, PIE, 16 KB</td></tr>
+        <tr><td bgcolor="#ffebee" align="left"><font face="Courier">call 1030 &lt;putc@plt&gt;</font><br align="left"/>Code von putc: in libc.so.6<br align="left"/>Ausgabe: <font face="Courier">A</font><br align="left"/></td></tr>
+      </table>>];
+    c -> i -> s -> o -> x;
+}
