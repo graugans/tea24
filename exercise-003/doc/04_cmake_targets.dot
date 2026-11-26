@@ -1,7 +1,7 @@
-// AUTOMATISCH ERZEUGT von CMake, nur Hintergrundfarbe ergänzt:
+// AUTOMATISCH ERZEUGT von CMake, ergänzt: Hintergrund, Titel, rankdir=LR (sonst zu breit)
 //   cmake --graphviz=exercise-003/doc/04_cmake_targets.dot build
 digraph "tea24" {
-graph [bgcolor="white", fontname="Helvetica", label="cmake --graphviz: alle Targets des Projekts tea24 (gepunktet = PRIVATE, gestrichelt = INTERFACE)", labelloc=t, fontsize=14];
+graph [bgcolor="white", fontname="Helvetica", rankdir=LR, label="cmake --graphviz: alle Targets des Projekts tea24\n(gepunktet = PRIVATE, gestrichelt = INTERFACE)", labelloc=t, fontsize=18];
 node [
   fontsize = "12"
 ];

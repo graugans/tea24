@@ -1,11 +1,11 @@
 // Teil 1: Was passiert beim (rekursiven) Aufruf von doSomethingStatic()?
 digraph stack {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.6, ranksep=1.0,
-           label="Teil 1: Jeder Aufruf bekommt einen eigenen Stack Frame – value (static) gibt es nur ein einziges Mal",
-           labelloc=t, fontsize=14];
-    node [fontname="Helvetica", fontsize=11, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9];
+           label="Teil 1: Jeder Aufruf bekommt einen eigenen Stack Frame\nvalue (static) gibt es nur ein einziges Mal",
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12];
 
     stack [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="6">
@@ -38,8 +38,10 @@ digraph stack {
         <tr><td>main → 2. Aufruf</td><td>58</td><td>42</td><td>…ae8  (Frame wiederverwendet)</td></tr>
       </table>>];
 
-    stack:f1 -> data:v [color="#e65100", label="value++"];
-    stack:f2 -> data:v [color="#e65100", label="dieselbe Variable!"];
-    stack:f1 -> bss:o  [color="#2e7d32", style=dashed, label="once = true\n→ nur einmal Rekursion"];
+    stack:f1:e -> data:v:n [color="#e65100", label="value++"];
+    stack:f2:e -> data:v:n [color="#e65100", label="dieselbe Variable!"];
+    stack:f1:w -> bss:o:n  [color="#2e7d32", style=dashed, label="once = true\n→ nur einmal Rekursion"];
+    {rank=same; bss; data;}
+    bss -> data [style=invis];
     data -> timeline [style=invis];
 }

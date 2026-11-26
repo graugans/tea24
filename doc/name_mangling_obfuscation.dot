@@ -2,10 +2,10 @@
 digraph obfuscation {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.4, nodesep=0.35, ranksep=0.7,
-           label=<<b>Name Mangling ist Kodierung, keine Verschleierung</b><br/><font point-size="11">gemessen an build/bin/exercise-002 (Debug-Build)</font>>,
-           labelloc=t, fontsize=16];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>Name Mangling ist Kodierung, keine Verschleierung</b><br/><font point-size="12">gemessen an build/bin/exercise-002 (Debug-Build)</font>>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12];
 
     src [shape=note, fillcolor="#fff9c4", color="#827717", fontname="Courier",
          label="namespace tea {\ltemplate <typename T>\lvoid printVar(std::string_view,\l              std::string_view,\l              std::string_view,\l              const T&);\l}\l"];
@@ -35,7 +35,7 @@ digraph obfuscation {
     back -> full [style=invis];
     full -> stripped [label="strip", penwidth=2];
 
-    hide [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+    hide [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=12, label=<
       <b>Was Symbole tatsächlich reduziert</b><br align="left"/>
       • Release-Build ohne <font face="Courier">-g</font>, danach <font face="Courier">strip</font><br align="left"/>
       • <font face="Courier">static</font> / anonymer Namespace, <font face="Courier">-fvisibility=hidden</font><br align="left"/>

@@ -1,11 +1,11 @@
 // PUBLIC / PRIVATE: welche Eigenschaften wandern zu wem?
 digraph usage {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=1.2,
-           label=<<b>PUBLIC vs. PRIVATE</b> – target_link_libraries() übernimmt die „Usage Requirements“ der Bibliothek>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>PUBLIC vs. PRIVATE</b><br/>target_link_libraries() übernimmt die „Usage Requirements“ der Bibliothek>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12];
 
     lib [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
@@ -29,12 +29,12 @@ digraph usage {
         <tr><td align="left">PUBLIC: -I /usr/include (fmt)</td></tr>
       </table>>];
 
-    lib:pub  -> exe:inc   [color="#2e7d32", penwidth=2, label="PUBLIC: wird\nweitergereicht"];
-    lib:priv -> exe:noinc [color="#c62828", style=dashed, arrowhead=tee, label="PRIVATE: bleibt\nin der Bibliothek"];
-    lib:fmt  -> fmt       [color="#616161"];
-    lib:fmt  -> exe:link  [color="#1565c0", style=dotted, label="Sonderfall STATIC:\n.a enthält offene U fmt::…\n→ $<LINK_ONLY:fmt::fmt>"];
+    lib:pub:e  -> exe:inc:e   [color="#2e7d32", penwidth=2, label="PUBLIC: wird\nweitergereicht"];
+    lib:priv:e -> exe:noinc:e [color="#c62828", style=dashed, arrowhead=tee, label="PRIVATE: bleibt\nin der Bibliothek"];
+    lib:fmt:s  -> fmt       [color="#616161"];
+    lib:fmt:e  -> exe:link:e  [color="#1565c0", style=dotted, label="Sonderfall STATIC:\n.a enthält offene U fmt::…\n→ $<LINK_ONLY:fmt::fmt>"];
 
-    rule [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+    rule [shape=note, style=filled, fillcolor="#fafafa", color="#9e9e9e", fontsize=12, label=<
       <b>Faustregel</b><br align="left"/>
       <b>PUBLIC</b>     – braucht die Bibliothek UND wer ihren Header einbindet<br align="left"/>
       <b>PRIVATE</b>    – braucht nur die Implementierung (.cpp)<br align="left"/>

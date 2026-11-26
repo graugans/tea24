@@ -2,10 +2,10 @@
 digraph order {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.35, newrank=true,
-           label=<<b>Frage D2: Der Linker liest von links nach rechts</b> – aus einem Archiv nimmt er nur, was <i>bis dahin</i> fehlt>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>Frage D2: Der Linker liest von links nach rechts</b><br/>aus einem Archiv nimmt er nur, was <i>bis dahin</i> fehlt>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12];
 
     subgraph cluster_ok {
         label=<<font face="Courier">gcc main.o -L. -lgreet -o main_lib</font>   ✓>; style="rounded,filled"; fillcolor="#e8f5e9"; color="#2e7d32";

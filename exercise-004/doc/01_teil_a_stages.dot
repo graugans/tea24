@@ -1,11 +1,11 @@
 // Teil A: Was jede Stufe aus main.c macht - mit echten Größen
 digraph stages {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.45,
-           label=<<b>Teil A mit echten Zahlen</b> – gcc 14, Teil-A-Stand aus Commit „step #1“>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9, color="#424242", penwidth=1.5];
+           label=<<b>Teil A mit echten Zahlen</b><br/>gcc 14, Teil-A-Stand aus Commit „step #1“>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12, color="#424242", penwidth=1.5];
 
     c [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">

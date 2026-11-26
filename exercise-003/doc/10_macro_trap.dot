@@ -1,11 +1,11 @@
 // Stolperfalle: glibc-Makros major()/minor() vs. unsere API
 digraph macro {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.8,
-           label=<<b>Makros kennen keine Namespaces</b> – wie aus tea::version::major() still gnu_dev_major() wird>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fontname="Courier"];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>Makros kennen keine Namespaces</b><br/>wie aus tea::version::major() still gnu_dev_major() wird>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled", fontname="Courier"];
+    edge [fontname="Helvetica", fontsize=12];
 
     sys [shape=note, fillcolor="#eeeeee", color="#757575", label="/usr/include/.../sys/sysmacros.h\l#define major(dev) gnu_dev_major (dev)\l#define minor(dev) gnu_dev_minor (dev)\l"];
     src [shape=note, fillcolor="#fff9c4", color="#827717", label="#include <sys/sysmacros.h>\l#include \"version/version.h\"\l...\lversion::major()\l"];

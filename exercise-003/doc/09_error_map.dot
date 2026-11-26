@@ -1,26 +1,43 @@
 // Bonus 5: In welcher Phase meldet sich welcher Fehler?
 digraph errors {
-    rankdir=LR;
-    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.7,
-           label=<<b>Fehlerlandkarte</b> – je früher ein Fehler auffällt, desto besser (alle Meldungen reproduziert)>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9, color="#9e9e9e"];
+    rankdir=TB;
+    newrank=true;
+    graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.35,
+           label=<<b>Fehlerlandkarte</b><br/>je früher ein Fehler auffällt, desto besser (alle Meldungen reproduziert)>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12, color="#9e9e9e"];
 
-    p1 [fillcolor="#e65100", fontcolor="white", label="CMake\nConfigure/Generate"];
-    p2 [fillcolor="#6a1b9a", fontcolor="white", label="Präprozessor"];
-    p3 [fillcolor="#1565c0", fontcolor="white", label="Compiler"];
-    p4 [fillcolor="#c62828", fontcolor="white", label="Linker"];
+    p1 [fillcolor="#e65100", fontcolor="white", width=2.2, label="CMake\nConfigure/Generate"];
+    p2 [fillcolor="#6a1b9a", fontcolor="white", width=2.2, label="Präprozessor"];
+    p3 [fillcolor="#1565c0", fontcolor="white", width=2.2, label="Compiler"];
+    p4 [fillcolor="#c62828", fontcolor="white", width=2.2, label="Linker"];
     p1 -> p2 -> p3 -> p4 [color="#424242", penwidth=2];
 
-    e5b [fillcolor="#fff3e0", label="5b: Tippfehler tea24::versoin\n„Target links to tea24::versoin\nbut the target was not found“"];
-    e1  [fillcolor="#f3e5f5", label="1: #include vergessen\n„use of undeclared identifier 'version'“"];
-    e2a [fillcolor="#f3e5f5", label="2a: target_link_libraries vergessen\n„'version/version.h' file not found“\n(Include-Pfad kommt erst MIT dem Link!)"];
-    e3  [fillcolor="#f3e5f5", label="3: Include-Pfad PRIVATE statt PUBLIC\nBibliothek baut ✓, Nutzer:\n„'version/version.h' file not found“"];
-    e4  [fillcolor="#f3e5f5", label="4: Build-Ordner nicht im Include-Pfad\n„'version_config.h' file not found“"];
-    e2b [fillcolor="#ffebee", label="2b: Link vergessen, Header von Hand\n„undefined reference to\n`tea::version::projectName()'“"];
-    e5a [fillcolor="#ffebee", label="5a: Tippfehler version_libary (ohne ::)\nzuerst Header fehlt, dann:\n„cannot find -lversion_libary“"];
-    e6  [fillcolor="#ffebee", label="Stolperfalle: <sys/sysmacros.h>\n„undefined reference to\n`tea::version::gnu_dev_major()'“"];
+    e1 [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#fff3e0">
+        <tr><td align="left"><b>5b</b>: Tippfehler <font face="Courier">tea24::versoin</font><br align="left"/>„Target links to tea24::versoin but the target was not found“<br align="left"/></td></tr>
+      </table>>];
+    e2 [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#f3e5f5">
+        <tr><td align="left"><b>2a</b>: target_link_libraries vergessen<br align="left"/>„'version/version.h' file not found“<br align="left"/>(Include-Pfad kommt erst MIT dem Link!)<br align="left"/></td></tr>
+        <tr><td align="left"><b>3</b>: Include-Pfad PRIVATE statt PUBLIC<br align="left"/>Bibliothek baut ✓, Nutzer: „'version/version.h' file not found“<br align="left"/></td></tr>
+        <tr><td align="left"><b>4</b>: Build-Ordner nicht im Include-Pfad<br align="left"/>„'version_config.h' file not found“<br align="left"/></td></tr>
+      </table>>];
+    e3 [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#e3f2fd">
+        <tr><td align="left"><b>1</b>: #include vergessen<br align="left"/>„use of undeclared identifier 'version'“<br align="left"/></td></tr>
+      </table>>];
+    e4 [shape=plaintext, style="", label=<
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#ffebee">
+        <tr><td align="left"><b>2b</b>: Link vergessen, Header von Hand<br align="left"/>„undefined reference to `tea::version::projectName()'“<br align="left"/></td></tr>
+        <tr><td align="left"><b>5a</b>: Tippfehler <font face="Courier">version_libary</font> (ohne ::)<br align="left"/>zuerst Header fehlt, dann: „cannot find -lversion_libary“<br align="left"/></td></tr>
+        <tr><td align="left"><b>Stolperfalle</b>: &lt;sys/sysmacros.h&gt;<br align="left"/>„undefined reference to `tea::version::gnu_dev_major()'“<br align="left"/></td></tr>
+      </table>>];
 
-    p1 -> e5b; p2 -> e2a; p2 -> e3; p2 -> e4; p3 -> e1; p4 -> e2b; p4 -> e5a; p4 -> e6;
+    p1 -> e1; p2 -> e2; p3 -> e3; p4 -> e4;
+    {rank=same; p1; e1;}
+    {rank=same; p2; e2;}
+    {rank=same; p3; e3;}
+    {rank=same; p4; e4;}
 }

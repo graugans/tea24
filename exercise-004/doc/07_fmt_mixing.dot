@@ -1,11 +1,11 @@
 // Teil E.2: Warum die Umstellung nur im Programm nicht reicht
 digraph mixing {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.7,
-           label=<<b>Teil E.2: header-only nur im Programm reicht nicht</b> – die statische Bibliothek bringt libfmt.so wieder mit>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>Teil E.2: header-only nur im Programm reicht nicht</b><br/>die statische Bibliothek bringt libfmt.so wieder mit>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12];
 
     subgraph cluster_bad {
         label="Aufgabe wörtlich: tea24::version + fmt::fmt-header-only"; style="rounded,filled"; fillcolor="#ffebee"; color="#c62828";
@@ -22,4 +22,6 @@ digraph mixing {
         ok2 [fillcolor="#c8e6c9", label="ldd: kein libfmt.so ✓"];
         lib2 -> exe2 -> ok2;
     }
+    exe1 -> lib2 [style=invis];
+    so1 -> lib2 [style=invis];
 }

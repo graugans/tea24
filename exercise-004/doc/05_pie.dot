@@ -1,11 +1,11 @@
 // PIE: Position Independent Executable
 digraph pie {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.6,
-           label=<<b>PIE vs. -no-pie</b> – dasselbe Programm, zweimal gestartet (gcc 14, ASLR aktiv)>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>PIE vs. -no-pie</b><br/>dasselbe Programm, zweimal gestartet (gcc 14, ASLR aktiv)>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12];
 
     pie [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="5">

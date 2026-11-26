@@ -3,8 +3,8 @@ digraph variants {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.4,
            label=<<b>Teil E: Was steckt im Programm, was kommt zur Laufzeit dazu?</b>>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
 
     t [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
@@ -20,7 +20,7 @@ digraph variants {
             <td bgcolor="#bbdefb">im Programm</td><td bgcolor="#bbdefb">im Programm<br/>(header-only)</td><td bgcolor="#e1bee7">.so</td><td bgcolor="#e1bee7">.so</td><td>860 KB / 195 KB</td></tr>
         <tr><td align="left"><b>exercise-004-full-static</b></td>
             <td bgcolor="#bbdefb">im Programm</td><td bgcolor="#bbdefb">im Programm</td><td bgcolor="#bbdefb">im Programm</td><td bgcolor="#bbdefb">im Programm</td><td>2,8 MB / 1,8 MB</td></tr>
-        <tr><td colspan="6" align="left"><font point-size="9"><font color="#1565c0">■</font> statisch: zur Linkzeit kopiert     <font color="#6a1b9a">■</font> dynamisch: zur Laufzeit von ld.so geladen</font></td></tr>
+        <tr><td colspan="6" align="left"><font point-size="12"><font color="#1565c0">■</font> statisch: zur Linkzeit kopiert     <font color="#6a1b9a">■</font> dynamisch: zur Laufzeit von ld.so geladen</font></td></tr>
       </table>>];
 
     upd [label=<

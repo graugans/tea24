@@ -1,11 +1,11 @@
 // Eine statische Bibliothek ist ein Archiv von .o-Dateien – der Linker nimmt nur, was gebraucht wird
 digraph archive {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=1.3,
-           label=<<b>libversion_library.a ist nur ein Archiv</b> (<font face="Courier">ar t</font>) – der Linker kopiert ganze .o-Dateien, aber nur die benötigten>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>libversion_library.a ist nur ein Archiv</b> (<font face="Courier">ar t</font>)<br/>der Linker kopiert ganze .o-Dateien, aber nur die benötigten>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12];
 
     archive [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">

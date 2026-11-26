@@ -2,10 +2,10 @@
 digraph c_api {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.9,
-           label=<<b>C-API über der C++-API</b> – extern "C" als Brücke zwischen zwei Welten>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>C-API über der C++-API</b><br/>extern "C" als Brücke zwischen zwei Welten>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12];
 
     subgraph cluster_c {
         label="C-Welt (clang, C-Compiler)"; style="rounded,filled"; fillcolor="#fffde7"; color="#f9a825";
@@ -28,7 +28,7 @@ digraph c_api {
     cobj -> wrap [color="#2e7d32", penwidth=2, label="gleiche Zeichenkette\n→ Link OK"];
     cpp -> deps;
 
-    linker [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=10, label=<
+    linker [shape=note, fillcolor="#fafafa", color="#9e9e9e", fontsize=12, label=<
       <b>Wer linkt ein C-Programm gegen eine C++-Bibliothek?</b><br align="left"/>
       CMake erkennt: version_library enthält C++ → nimmt den<br align="left"/>
       <b>C++-Linker</b> (CXX_EXECUTABLE_LINKER) und ergänzt libfmt.<br align="left"/>

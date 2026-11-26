@@ -2,10 +2,10 @@
 digraph is_at_least {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.4, ranksep=0.4,
-           label=<<b>isAtLeast(major, minor, patch)</b> – Bibliothek ist 0.1.2>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10];
-    edge [fontname="Helvetica", fontsize=9];
+           label=<<b>isAtLeast(major, minor, patch)</b><br/>Bibliothek ist 0.1.2>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12];
+    edge [fontname="Helvetica", fontsize=12];
 
     q1 [shape=diamond, style=filled, fillcolor="#f5f5f5", label="MAJOR (0)\nvs. major"];
     q2 [shape=diamond, style=filled, fillcolor="#f5f5f5", label="MINOR (1)\nvs. minor"];

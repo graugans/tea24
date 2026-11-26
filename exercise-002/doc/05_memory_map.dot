@@ -1,9 +1,9 @@
 // Memory Map von exercise-002 (Offsets aus `nm -SC`, identisch mit der Programmausgabe "(nm 0x…)")
 digraph memmap {
     graph [fontname="Helvetica", bgcolor="white", pad=0.3,
-           label="Memory Map (Debug-Build, clang 22, GNU ld) – Laufzeitadresse = Ladeadresse (ASLR) + nm-Offset",
-           labelloc=t, fontsize=14];
-    node [fontname="Courier", fontsize=10, shape=plaintext];
+           label="Memory Map (Debug-Build, clang 22, GNU ld)\nLaufzeitadresse = Ladeadresse (ASLR) + nm-Offset",
+           labelloc=t, fontsize=18];
+    node [fontname="Courier", fontsize=12, shape=plaintext];
 
     map [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="4">

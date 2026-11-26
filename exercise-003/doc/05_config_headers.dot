@@ -3,9 +3,9 @@ digraph config {
     rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.5, ranksep=0.6,
            label=<<b>Wessen Version?</b> Jeder project()-Aufruf setzt eigene PROJECT_*-Variablen>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled"];
-    edge [fontname="Helvetica", fontsize=9];
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=box, style="rounded,filled"];
+    edge [fontname="Helvetica", fontsize=12];
 
     root [fillcolor="#eeeeee", color="#616161", label="Root CMakeLists.txt\nproject(tea24)\nCMAKE_PROJECT_NAME = tea24\n(keine VERSION)"];
     libp [fillcolor="#bbdefb", color="#1565c0", label="libs/version/CMakeLists.txt\nproject(version_library VERSION 0.1.2)\nPROJECT_NAME = version_library"];
@@ -23,7 +23,7 @@ digraph config {
     api [fillcolor="#fff9c4", color="#827717", label="tea::version::fullVersion()\n→ \"version_library-0.1.2\""];
     vh -> api;
 
-    old [shape=note, fillcolor="#ffebee", color="#c62828", fontsize=10, label=<
+    old [shape=note, fillcolor="#ffebee", color="#c62828", fontsize=12, label=<
       <b>Vorher: beide Header mit Guard CONFIG_H_IN und namespace tea</b><br align="left"/><br align="left"/>
       #include "config.h" + #include "version_config.h"<br align="left"/>
       → zweiter Header wird still übersprungen:<br align="left"/>

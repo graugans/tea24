@@ -1,11 +1,11 @@
 // Die vier Phasen: Configure, Generate, Build, Run – und wann was passiert
 digraph phases {
-    rankdir=LR;
+    rankdir=TB;
     graph [fontname="Helvetica", bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.5,
-           label=<<b>Wann passiert was?</b> configure_file() und string(TIMESTAMP) laufen beim Configure – nicht bei jedem Build>,
-           labelloc=t, fontsize=15];
-    node [fontname="Helvetica", fontsize=10, shape=plaintext];
-    edge [fontname="Helvetica", fontsize=9, penwidth=2, color="#424242"];
+           label=<<b>Wann passiert was?</b> configure_file() und string(TIMESTAMP) laufen beim Configure<br/>nicht bei jedem Build>,
+           labelloc=t, fontsize=18];
+    node [fontname="Helvetica", fontsize=12, shape=plaintext];
+    edge [fontname="Helvetica", fontsize=12, penwidth=2, color="#424242"];
 
     configure [label=<
       <table border="0" cellborder="1" cellspacing="0" cellpadding="5">
