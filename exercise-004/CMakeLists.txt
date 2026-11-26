@@ -20,3 +20,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
                                         tea24::version
                                         fmt::fmt
 )
+
+############################################################
+# E.2: {fmt} header-only - der {fmt}-Code wird in das Programm übersetzt
+############################################################
+
+# Nicht tea24::version: Die Bibliothek bringt sonst über LINK_ONLY wieder libfmt.so mit.
+# fmt::fmt und fmt::fmt-header-only dürfen nicht im selben Programm gemischt werden.
+add_executable(${PROJECT_NAME}-static main.cpp)
+target_link_libraries(${PROJECT_NAME}-static PRIVATE
+                                        tea24::version_fmt_header_only
+                                        fmt::fmt-header-only
+)

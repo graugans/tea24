@@ -73,6 +73,23 @@ target_include_directories(version_library_shared
 target_link_libraries(version_library_shared PRIVATE fmt::fmt)
 
 ############################################################
+# Exercise 004, part E.2: static library built against header-only {fmt}
+############################################################
+
+# A program that wants {fmt} without libfmt.so must not mix both variants:
+# version_library links fmt::fmt PRIVATE, but a STATIC library still forwards it
+# to its users as $<LINK_ONLY:fmt::fmt>, so libfmt.so would end up in the program.
+# This variant compiles the same sources with FMT_HEADER_ONLY instead.
+add_library(version_library_fmt_header_only STATIC ${VERSION_LIBRARY_SOURCES})
+add_library(tea24::version_fmt_header_only ALIAS version_library_fmt_header_only)
+
+target_include_directories(version_library_fmt_header_only
+    PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+target_link_libraries(version_library_fmt_header_only PRIVATE fmt::fmt-header-only)
+
+############################################################
 # Bonus 1: unit tests for isAtLeast() and friends
 ############################################################
 
