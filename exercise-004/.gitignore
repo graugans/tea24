@@ -1,0 +1,12 @@
+# Erzeugt durch die Befehle aus Teil A bis D der Aufgabe.
+# *.o, *.a, *.so und a.out ignoriert bereits die .gitignore im Projektverzeichnis.
+
+# Teil A: Präprozessor- und Compiler-Ausgabe
+*.i
+*.s
+
+# Teil A bis D: gelinkte Programme
+main
+main_static
+main_lib
+main_so
